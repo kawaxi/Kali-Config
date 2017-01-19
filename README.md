@@ -9,12 +9,12 @@ Confiuration of the IRC bouncer its not perfect, Please feel free to do your own
 
 Express Install: Will install basic apps and configure services and your system for daily use.
 
-	Atom             	 Asciinema       	Pure-FTPd
-	Hexchat         	 Shutter         	Apache2
-	Terminator        	 htop           	 Mysql
-	Conky             	 psmisc         	 SSH
-	Icedove           	 Pipe Vievwer   	 Tftp
-	LibreOffice       	 Filezilla
+	Atom   		          			 			 Asciinema       							Pure-FTPd
+	Hexchat         							 Shutter         							Apache2
+	Terminator        							 htop           							Mysql
+	Conky             			 				 psmisc         							SSH
+	Icedove           							 Pipe Vievwer   			 				Tftp
+	LibreOffice       			 				 Filezilla
 
 
 Full Install: Will Install Express module apps, full package repos and let your system ready for Pentesting.
