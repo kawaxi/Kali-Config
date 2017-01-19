@@ -1,11 +1,13 @@
 # Kali-Setup
-Fully automated Bash script to setup your Kali system, Tested on Kali 2016.2 Vmware x64.
 
-The idea came to me when I was taking OSCP (Offensive Security Certified Professional)  , even tho I have worked hard on it its far from perfection, I used this script as learning process as well wich is the reason on why I do several things on several ways.
+#Fully automated Bash script to setup your Kali system, Tested on Kali 2016.2 Vmware x64.
+
+The idea came to me when I was taking OSCP (Offensive Security Certified Professional) , it was my own initiative and even tho I've worked hard on it it's far from perfection, I used this script as a  learning process as well wich is the main reason why I did several things using different methologies.
 
 I did use some lines from G0tmilk script however must of lines can be found on the web.
 
-Confiuration of the IRC bouncer its not perfect, Please feel free to do your own contribution.
+Some of the repos are included in the FULL Kali Distribution, I also added new software as result of my reasearch fixing problems.
+
 
 Express Install: It will install basic apps and configure services and your system for daily use.
 
@@ -33,5 +35,13 @@ Just do:
 # git clone https://github.com/kawaxi/kali-setup
 
 # start -h
+
+
+
+Pending Ideas: 
+* Working with counter using modules
+* Fix IRC Bouncer Configuration
+* Need to Include personalized exploits to exploit DB.
+
 
 
