@@ -19,12 +19,12 @@ Express Install: Will install basic apps and configure services and your system 
 
 Full Install: Will Install full package repos and let your system ready for Pentesting.
 
-	MSF		OpenVas		Sshuttle	GCC		MITMf		Wig		GoBuster
-	Armitage	VFeed		Pfi		MinGW		Wordlists	CMSmap		reGeorg	
-	Python		Graudit		AccessChk	Wine		Smbspider	Droopescan	Patetor
-	Pycharm		Daemonfs	PsExec.exe	Hyperion	CrackMapExec	Crowbar		Clusterd
-	Wdiff		Proxychains	Veil-framework	BDFProxy	Credcrack	Subterfuge	Webhandler
-	Vbindiff	HttpTunnel	OP-Packers	BetterCap	Empire		Azazel		Gnmap-Parser
+	MSF		OpenVas		Sshuttle		GCC		MITMf		Wig		GoBuster
+	Armitage	VFeed		Pfi			MinGW		Wordlists	CMSmap		reGeorg	
+	Python		Graudit		AccessChk		Wine		Smbspider	Droopescan	Patetor
+	Pycharm		Daemonfs	PsExec.exe		Hyperion	CrackMapExec	Crowbar		Clusterd
+	Wdiff		Proxychains	Veil-framework		BDFProxy	Credcrack	Subterfuge	Webhandler
+	Vbindiff	HttpTunnel	OP-Packers		BetterCap	Empire		Azazel		Gnmap-Parser
 	
 
 
