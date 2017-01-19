@@ -7,7 +7,7 @@ I did use some lines from G0tmilk script however must of lines can be found on t
 
 Confiuration of the IRC bouncer its not perfect, Please feel free to do your own contribution.
 
-Express Install: Will install basic apps and configure services and your system for daily use.
+Express Install: It will install basic apps and configure services and your system for daily use.
 
 	Atom   		          			 			 Asciinema       							Pure-FTPd
 	Hexchat         							 Shutter         							Apache2
@@ -17,7 +17,7 @@ Express Install: Will install basic apps and configure services and your system 
 	LibreOffice       			 				 Filezilla
 
 
-Full Install: Will Install Express module apps, full package repos and let your system ready for Pentesting.
+Full Install: It will Install Express module apps, full package repos and let your system ready for Pentesting.
 
 	MSF				OpenVas			Sshuttle			GCC			MITMf			Wig				GoBuster
 	Armitage		VFeed			Pfi					MinGW		Wordlists		CMSmap			reGeorg	
