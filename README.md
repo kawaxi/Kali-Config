@@ -17,7 +17,7 @@ Express Install: Will install basic apps and configure services and your system 
 	LibreOffice       	 Filezilla
 
 
-Full Install: Will Install full package repos and let your system ready for Pentesting.
+Full Install: Will Install Express module apps, full package repos and let your system ready for Pentesting.
 
 	MSF				OpenVas			Sshuttle			GCC			MITMf			Wig				GoBuster
 	Armitage		VFeed			Pfi					MinGW		Wordlists		CMSmap			reGeorg	
