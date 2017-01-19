@@ -17,7 +17,6 @@ Icedove            Pipe Vievwer    Tftp
 LibreOffice        Filezilla
 
 
-
 Full Install: Will Install full package and let your system ready for Pentesting.
 
 Just do: 
