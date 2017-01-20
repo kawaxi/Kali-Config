@@ -12,17 +12,17 @@ timezone=""                 # Set timezone location                             
 burpFree=false              # Configure Burp Suite (for Burp Pro users...)              [ --burp ]
 hardenDNS=false             # Set static & lock DNS name server                         [ --dns ]
 openVAS=false               # Install & configure OpenVAS 				[ --openvas ]
-f=false				# Full install?
+f=false			    # Full install?
 FULL=0
 UPDATE=0
 
 #####  Normal Colors
-RED="\033[01;31m"      # Issues/Errors
-GREEN="\033[01;32m"    # Success
-YELLOW="\033[01;33m"   # Warnings/Information
-BLUE="\033[00;94m"     # Heading
-BOLD="\033[01;01m"     # Highlight
-RESET="\033[00m"       # Normal
+RED="\033[01;31m"           # Issues/Errors
+GREEN="\033[01;32m"         # Success
+YELLOW="\033[01;33m"        # Warnings/Information
+BLUE="\033[00;94m"          # Heading
+BOLD="\033[01;01m"          # Highlight
+RESET="\033[00m"            # Normal
 ORANGE="\033[0;33m"
 WHITE="\033[1;37m"
 CYAN='\033[0;36m'
