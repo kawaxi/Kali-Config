@@ -34,6 +34,8 @@ Just do:
 
 # git clone https://github.com/kawaxi/kali-setup
 
+For help do:
+
 # start -h
 
 
