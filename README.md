@@ -1,6 +1,6 @@
 # Kali-Setup
 
-#Fully automated Bash script to setup your Kali system, Tested on Kali 2016.2 Vmware x64.
+#Fully automated bash script to setup your Kali system, Tested on Kali 2016.2 Vmware x64.
 
 The idea came to me when I was taking OSCP (Offensive Security Certified Professional) , it was my own initiative and even tho I've worked hard on it it's far from perfection, I used this script as a  learning process as well wich is the main reason why I did several things using different methologies.
 
