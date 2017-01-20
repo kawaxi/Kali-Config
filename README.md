@@ -39,8 +39,8 @@ Just do:
 
 
 Pending Ideas: 
-* Working with counter using modules
-* Fix IRC Bouncer Configuration
+* Working with counters inside modules
+* Fix IRC Bouncer Configuration ( it fails to replace one line)
 * Need to Include personalized exploits to exploit DB.
 
 
