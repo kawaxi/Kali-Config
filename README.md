@@ -44,7 +44,7 @@ Pending Ideas:
 * Working with counters inside modules
 * Fix IRC Bouncer Configuration ( it fails to replace one line)
 * Need to Include personalized exploits to exploit DB.
-* Time no longer syncs no matter what, you need to do it manually.
+* Need to fix time no longer syncing  after resuming VM, you need to do it manually.
 
 
 
