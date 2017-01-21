@@ -5,8 +5,7 @@ configure--()
 {
 
 
-
-#--- Installing ntp tools # lets stay on time of thing would ya?
+#--- Installing ntp tools # this is for sync time while we run the script.
 
 (( STAGE++ )); echo -e " ${GREEN}[+]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing ntpdate ${ORANGE} ~ Keeping the Time in Sync ${RESET} "
 apt -y -qq install ntp ntpdate \
@@ -52,7 +51,7 @@ if [[ $(which gnome-shell) ]]; then
   xset s off
   gsettings set org.gnome.desktop.session idle-delay 0
 else
-  echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping disabling package updater${RESET}..."
+  echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping  from disabling package updater${RESET}..."
 fi
 
 
@@ -63,30 +62,30 @@ gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'org.gnome.
 #gsettings get org.gnome.shell favorite-apps "['firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop', 'icedove.desktop', 'shutter.desktop', 'hexchat.desktop']"
 
 
-##### Configure GNOME terminal   Note: need to restart xserver for effect
+##### Configure GNOME terminal ;  Note: need to restart xserver for effect
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuring GNOME terminal${ORANGE} ~ CLI interface"
 gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited true
 gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/background_type transparent
 gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/background_darkness 0.85611499999999996
 
 
-##### Configure bash - all users
+##### Configure bash - All users
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuring bash${ORANGE} ~ CLI shell"
 file=/etc/bash.bashrc; [ -e "${file}" ] && cp -n $file{,.bkup}   #~/.bashrc
 grep -q "cdspell" "${file}" \
-|| echo "shopt -sq cdspell" >> "${file}"             # Spell check 'cd' commands
+|| echo "shopt -sq cdspell" >> "${file}"               # Spell check 'cd' commands
 grep -q "autocd" "${file}" \
-|| echo "shopt -s autocd" >> "${file}"                # So you don't have to 'cd' before a folder
+|| echo "shopt -s autocd" >> "${file}"                 # So you don't have to 'cd' before a folder
 #grep -q "CDPATH" "${file}" \
 # || echo "CDPATH=/etc:/usr/share/:/opt" >> "${file}"  # Always CD into these folders
 grep -q "checkwinsize" "${file}" \
-|| echo "shopt -sq checkwinsize" >> "${file}"         # Wrap lines correctly after resizing
+|| echo "shopt -sq checkwinsize" >> "${file}"          # Wrap lines correctly after resizing
 grep -q "nocaseglob" "${file}" \
-|| echo "shopt -sq nocaseglob" >> "${file}"           # Case insensitive pathname expansion
+|| echo "shopt -sq nocaseglob" >> "${file}"            # Case insensitive pathname expansion
 grep -q "HISTSIZE" "${file}" \
-|| echo "HISTSIZE=10000" >> "${file}"                 # Bash history (memory scroll back)
+|| echo "HISTSIZE=10000" >> "${file}"                  # Bash history (memory scroll back)
 grep -q "HISTFILESIZE" "${file}" \
-|| echo "HISTFILESIZE=10000" >> "${file}"             # Bash history (file .bash_history)
+|| echo "HISTFILESIZE=10000" >> "${file}"              # Bash history (file .bash_history)
 #--- Apply new configs
 source "${file}" || source ~/.zshrc
 
