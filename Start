@@ -3,7 +3,7 @@
 # bash Start -f --winkeys --keyboard es --timezone America/Mexico_City --openvas
 
 ##### Location information
-keyboardApple=false         # Using a Apple/Macintosh keyboard (non VM)?                [ --osx ]
+keyboardApple=false         # Using an Apple/Macintosh keyboard (non VM)?                [ --osx ]
 keyboardWin=false	    # Using a Windows Keyboard ? 				[ --winkeys ]
 keyboardLayout=""           # Set keyboard layout                                       [ --keyboard es]
 timezone=""                 # Set timezone location                                     [ --timezone America/Mexico_City ]
@@ -30,28 +30,28 @@ MAGENTA='\033[00;35m'
 
 #Intense Colors
 
-IBLACK='\033[0;90m'       # Black
-IRED='\033[0;91m'         # Red
-IGREEN='\033[0;92m'       # Green
-IYELLOW='\033[0;93m'      # Yellow
-IBLUE='\033[0;94m'        # Blue
-IPurple='\033[0;95m'      # Purple
-ICYAN='\033[0;96m'        # Cyan
-IWHITE='\033[0;97m'       # White
+IBLACK='\033[0;90m'        # Black
+IRED='\033[0;91m'          # Red
+IGREEN='\033[0;92m'        # Green
+IYELLOW='\033[0;93m'       # Yellow
+IBLUE='\033[0;94m'         # Blue
+IPurple='\033[0;95m'       # Purple
+ICYAN='\033[0;96m'         # Cyan
+IWHITE='\033[0;97m'        # White
 On_Yellow='\033[43m'
 On_Cyan='\033[46m'
 On_White='\033[47m'
 On_Blue='\033[44m'
 
 # Underline Colors
-UBlack='\033[4;30m'       # Black
-URed='\033[4;31m'         # Red
-UGreen='\033[4;32m'       # Green
-UYellow='\033[4;33m'      # Yellow
-UBlue='\033[4;34m'        # Blue
-UPurple='\033[4;35m'      # Purple
-UCyan='\033[4;36m'        # Cyan
-UWhite='\033[4;37m'       # White
+UBlack='\033[4;30m'        # Black
+URed='\033[4;31m'          # Red
+UGreen='\033[4;32m'        # Green
+UYellow='\033[4;33m'       # Yellow
+UBlue='\033[4;34m'         # Blue
+UPurple='\033[4;35m'       # Purple
+UCyan='\033[4;36m'         # Cyan
+UWhite='\033[4;37m'        # White
 
 
 #--- Declaring ------------------------------------------------------------#
@@ -68,14 +68,11 @@ STAGE=0                                                       # Where are we up 
 #TOTAL=$(grep '(${STAGE}/${TOTAL})' $0 | wc -l);(( TOTAL-- ))  # How many things have we got todo
 
 ### TOTAL STAGES FOR TOTAL
-C=19      # Number of STAGES in Config File
-S=4       # Number of STAGES In Start File
-U=2       # Number of STAGES In Update File
+C=19        # Number of STAGES in Config File
+S=4         # Number of STAGES In Start File
+U=2         # Number of STAGES In Update File
 X=17        # Number of STAGES In Express File
 F=58        # Number of STAGES In FUll File
-
-
-
 
 
 
@@ -183,7 +180,7 @@ notice--(){
 
   printf "$BLUE\n"
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'                    #  big chain of ####
-  printf "\n##" && printf "%$((M - 5))s ##"                                    # Middle ##  ; use 5 for full width for ## or 7 for ###
+  printf "\n##" && printf "%$((M - 5))s ##"                                    # Middle ##  ; use 5 for full width for ##, or 7 for ###
   printf "\n$BLUE## $RED $TEXT" && printf "$BLUE%$((M - ${#TEXT} - 7))s ##"    # MAIN TEST, remember to subtract the size of "TEST"
   printf "\n##" && printf "% $((M - 5))s ##"                                   #
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
@@ -195,8 +192,8 @@ notice--(){
 heading--(){
 
   TEXT='Kawaxis Kali Linux Rolling 2016.2 Setup Script! V. 1.0  '
-  span=$(((M + ${#TEXT}) / 2 ))                                 # Center text
-  A=$((span - ${#TEXT} - 3 ))                                   # Making sure to center if heading exists
+  span=$(((M + ${#TEXT}) / 2 ))                               		# Center text
+  A=$((span - ${#TEXT} - 3 ))                                   	# Making sure to center if heading exists
 
   printf "$GREEN\n"
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
@@ -206,7 +203,7 @@ heading--(){
 
 
   TEXT='Make sure to run it as RooT!!   '
-  span=$(((M + ${#TEXT}) / 2 ))                                 # Center text
+  span=$(((M + ${#TEXT}) / 2 ))                                 	# Center text
   A=$((span - ${#TEXT} - 3 ))
   printf "\n$GREEN###" && printf "%${A}s $TEXT" && printf "$GREEN%$((span -${#TEXT} - 5 ))s ###"   #   CENTER your text
   printf "\n###" && printf "%$((M - 7))s ###"
