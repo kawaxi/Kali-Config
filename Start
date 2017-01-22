@@ -4,15 +4,15 @@
 
 ##### Location information
 keyboardApple=false         # Using an Apple/Macintosh keyboard (non VM)?                [ --osx ]
-keyboardWin=false	    # Using a Windows Keyboard ? 				[ --winkeys ]
+keyboardWin=false	          # Using a Windows Keyboard ? 				[ --winkeys ]
 keyboardLayout=""           # Set keyboard layout                                       [ --keyboard es]
 timezone=""                 # Set timezone location                                     [ --timezone America/Mexico_City ]
 
 ##### Optional steps
-burpFree=false              # Configure Burp Suite (for Burp Pro users...)              [ --burp ]
+burpFree=false              # Configures Burp Suite (for Burp Pro users...)              [ --burp ]
 hardenDNS=false             # Set static & lock DNS name server                         [ --dns ]
 openVAS=false               # Install & configure OpenVAS 				[ --openvas ]
-f=false			    # Full install?
+f=false			               	# Full install?
 FULL=0
 UPDATE=0
 
@@ -44,14 +44,14 @@ On_White='\033[47m'
 On_Blue='\033[44m'
 
 # Underline Colors
-UBlack='\033[4;30m'        # Black
-URed='\033[4;31m'          # Red
-UGreen='\033[4;32m'        # Green
-UYellow='\033[4;33m'       # Yellow
-UBlue='\033[4;34m'         # Blue
-UPurple='\033[4;35m'       # Purple
-UCyan='\033[4;36m'         # Cyan
-UWhite='\033[4;37m'        # White
+UBlack='\033[4;30m'       # Black
+URed='\033[4;31m'         # Red
+UGreen='\033[4;32m'       # Green
+UYellow='\033[4;33m'      # Yellow
+UBlue='\033[4;34m'        # Blue
+UPurple='\033[4;35m'      # Purple
+UCyan='\033[4;36m'        # Cyan
+UWhite='\033[4;37m'       # White
 
 
 #--- Declaring ------------------------------------------------------------#
@@ -64,7 +64,7 @@ source lib/full
 
 M=${COLUMNS:-$(tput cols)}                                    # Using our full width
 
-STAGE=0                                                       # Where are we up to
+STAGE=0                                                       # Where are we up to?
 #TOTAL=$(grep '(${STAGE}/${TOTAL})' $0 | wc -l);(( TOTAL-- ))  # How many things have we got todo
 
 ### TOTAL STAGES FOR TOTAL
@@ -73,6 +73,9 @@ S=4         # Number of STAGES In Start File
 U=2         # Number of STAGES In Update File
 X=17        # Number of STAGES In Express File
 F=58        # Number of STAGES In FUll File
+
+
+
 
 
 
@@ -191,9 +194,9 @@ notice--(){
 
 heading--(){
 
-  TEXT='Kawaxis Kali Linux Rolling 2016.2 Setup Script! V. 1.0  '
-  span=$(((M + ${#TEXT}) / 2 ))                               		# Center text
-  A=$((span - ${#TEXT} - 3 ))                                   	# Making sure to center if heading exists
+  TEXT="Kawaxi's Kali Linux Rolling 2016.2 Setup Script! V. 1.0 "
+  span=$(((M + ${#TEXT}) / 2 ))                                                # Center text
+  A=$((span - ${#TEXT} - 3 ))                                                  # Making sure to center if heading exists
 
   printf "$GREEN\n"
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
@@ -203,7 +206,7 @@ heading--(){
 
 
   TEXT='Make sure to run it as RooT!!   '
-  span=$(((M + ${#TEXT}) / 2 ))                                 	# Center text
+  span=$(((M + ${#TEXT}) / 2 ))                                 # Center text
   A=$((span - ${#TEXT} - 3 ))
   printf "\n$GREEN###" && printf "%${A}s $TEXT" && printf "$GREEN%$((span -${#TEXT} - 5 ))s ###"   #   CENTER your text
   printf "\n###" && printf "%$((M - 7))s ###"
@@ -303,7 +306,7 @@ shorth--(){
   	     -f)
           banner--
           heading--
-          TEXT=' Full Install selected, maaaan you better go take a nap or something '
+          TEXT=' Full Install selected, this will take a while, please wait patienly '
           notice--
   		    UPDATE=3
           TOTAL=$((S + C + U + X + F))
@@ -311,7 +314,7 @@ shorth--(){
 
 
   	     -x)
-          TEXT='[*] Initiating Express module with Update !'
+          TEXT='[*] Initiating express module with update !'
           notice--
           FULL=1
           TOTAL=$((S + C + U + X ))
@@ -319,7 +322,7 @@ shorth--(){
 
   	     -xx)
           banner--
-          TEXT="[*] Express Module with no update !"
+          TEXT="[*] Initiating express module with no update !"
           notice--
           FULL=1
           TOTAL=$((S + C + X ))
@@ -327,8 +330,8 @@ shorth--(){
 
   	      *)
           banner--
-          TEXT="[*] Express Module with no update !"
-          heading--
+          TEXT="¡¡¡¡  Please provide a valid argument for the script !!!!"
+          notice--
           shorth--
 
   	            exit 1;;
@@ -360,12 +363,12 @@ shorth--(){
 
   ##### Check user inputs
   if [[ -n "${timezone}" && ! -f "/usr/share/zoneinfo/${timezone}" ]]; then
-    echo -e ' '${RED}'[!]'${RESET}" Looks like the ${RED}timezone '${timezone}'${RESET} is incorrect/not supported (Example: ${BOLD}America/Mexico_City ${RESET})" 1>&2
+    echo -e ' '${RED}'[!]'${RESET}" It Looks like the ${RED}timezone '${timezone}'${RESET} is incorrect/not supported (Example: ${BOLD}America/Mexico_City ${RESET})" 1>&2
     echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
     exit 1
   elif [[ -n "${keyboardLayout}" && -e /usr/share/X11/xkb/rules/xorg.lst ]]; then
     if ! $(grep -q " ${keyboardLayout} " /usr/share/X11/xkb/rules/xorg.lst); then
-      echo -e ' '${RED}'[!]'${RESET}" Looks like the ${RED}keyboard layout '${keyboardLayout}'${RESET} is incorrect/not supported (Example: ${BOLD}gb${RESET})" 1>&2
+      echo -e ' '${RED}'[!]'${RESET}" It Looks like the ${RED}keyboard layout '${keyboardLayout}'${RESET} is incorrect/not supported (Example: ${BOLD}gb${RESET})" 1>&2
       echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
       exit 1
     fi
@@ -377,7 +380,7 @@ shorth--(){
 
 
   if  [[ "${UPDATE}" -ge 3   ]]; then
-    TEXT='Initiating System Update, go take a P0W3r NAP!'
+    TEXT="Initiating System's Update, this will take a while!"
     notice--
   	update--
 
@@ -385,7 +388,7 @@ shorth--(){
 
   	  if [[ "${UPDATE}" -ge 1  ]]; then
         	heading--
-        TEXT='We wont update the system this time ....Skipping!'
+        TEXT="We won't update the system this time ....Skipping!"
   	    notice--
   	  fi
   fi
@@ -399,10 +402,10 @@ shorth--(){
 
 start_time=$(date +%s) #Used for time Stats
 
-# so you can watch progress  gsettings set org.gnome.desktop.lockdown disable-lock-screen true
+# so you can watch progress , another options is  gsettings set org.gnome.desktop.lockdown disable-lock-screen true
 gsettings set org.gnome.desktop.screensaver lock-enabled false
 
-## if 32 bits, Creating /usr/local/bin , our Script uses it to install apps.
+## if using 32 bits Create /usr/local/bin , our Script uses it to install apps.
 if [[ $(getconf LONG_BIT) = 32 ]]; then
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Creating /usr/local/bin Directory... ${RESET}"
 mkdir /usr/local/bin
@@ -457,7 +460,7 @@ fi
   heading --
   configure--
 
-  TEXT='!! System Configuration done!!'
+  TEXT="!! System's Configuration done!!"
   notice--
 
 
