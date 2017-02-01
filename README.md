@@ -2,11 +2,12 @@
 
 #Fully automated bash script to setup your Kali system, Tested on Kali 2016.2 Vmware x64.
 
-The idea came to me when I was taking OSCP (Offensive Security Certified Professional) , it was my own initiative and even tho I've worked hard on it it's far from perfection, I used this script as a  learning process as well wich is the main reason why I did several things using different methologies.
+This idea came to me while taking the OSCP.  I took my own initiative to create this script, though it's far from perfect,I created this script as part of continuing my education, as a result I applied several different methodologies in creating it.
 
-I did use some lines from G0tmilk script however must of lines can be found on the web.
+I borrowed several lines from g0tmi1ks script though most of the lines are available open source on the net.
 
-Some of the repos are included in the FULL Kali Distribution, I also added new software as result of my reasearch fixing problems.
+
+Some of the repos are included in the full Kali Distro, I also added additional software in order to fix several known issues with Kali
 
 
 Express Install: It will install basic apps and configure services and your system for daily use.
@@ -45,6 +46,9 @@ Pending Ideas:
 * Fix IRC Bouncer Configuration ( it fails to replace one line)
 * Need to Include personalized exploits to exploit DB.
 * Need to fix time no longer syncing  after resuming VM, you need to do it manually.
+* Add Off the record messaging plug in -otr
+* Set key macros for programming.  
+* Make script to trap TERM signal.
 
 
 
