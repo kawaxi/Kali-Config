@@ -1,0 +1,38 @@
+
+
+#-- Function help ####
+
+
+help--(){
+
+  echo -e ''${WHITE}"[*] Usage: $0 -option --module"
+  echo -e "[*] Options:"
+
+  echo -e "[*] -f                       Full Install "
+  echo -e "[*] -x                       Express install - Unattended with Update "
+  echo -e "[*] -xx                      Express install - Unattended without Update "
+  echo -e "[*]  Extra Modules : "
+
+  echo -e ''${RED}"[*]  openvas                 Install OpenVas "
+  echo -e "[*]  burp                    Configures Burpsuite "
+  echo -e "[*]  timezone                Configures your system's time zone ex:America/Mexico_City"
+  echo -e "[*]  keyboard                Keyboard's language ex: Use en for English "
+  echo -e "[*]  osx                     Configures your OSX Keyboard"
+  echo -e "[*]  winkeys                 Configures your Windows Keyboard "
+  exit 0;
+}
+
+#### Function short help ####
+shorth--(){
+  TEXT=" ¡¡¡¡  Please provide a valid argument for the script !!!!"
+  centrar-- ;   printf "%${A}s$WHITE$TEXT\n\n"
+
+  echo -e "[*] Usage:  		     $0 -option --module"
+  echo -e "[*] options:"
+
+  echo -e "[*] -f                       Full Install whith Update "
+  echo -e ''${RED}"[*] -x                       Express install - Unattended with Update "
+  echo -e "[*] -xx                      Express install - Unattended without Update "
+  echo -e "[*] -h                 	     Shows Full Help whith options and modules"
+
+}
