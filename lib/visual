@@ -1,0 +1,144 @@
+
+#### Funcionts , Banners, Header, ####
+
+centrar--(){
+# Center text
+span=$(((M + ${#TEXT}) / 2 ))
+A=$((span - ${#TEXT} ))
+}
+
+
+banner--()
+{
+
+M=${COLUMNS:-$(tput cols)}
+    if ((M <= 84 ));  then
+
+      echo -e  ''${GREEN}"        ##    ##    ###    ##      ##    ###    ##     ## ####  ######   "
+      echo -e  ''${GREEN}"        ##   ##    ## ##   ##  ##  ##   ## ##    ##   ##   ##  ##    ## "
+      echo -e  ''${GREEN}"        ##  ##    ##   ##  ##  ##  ##  ##   ##    ## ##    ##  ##       "
+      echo -e  ''${WHITE}"        #####    ##     ## ##  ##  ## ##     ##    ###     ##   ######  "
+      echo -e  ''${WHITE}"        ##  ##   ######### ##  ##  ## #########   ## ##    ##        ## "
+      echo -e  ''${RED} "       ##   ##  ##     ## ##  ##  ## ##     ##  ##   ##   ##  ##    ##   "
+      echo -e  ''${RED}"        ##    ## ##     ##  ###  ###  ##     ## ##     ## ####  ######     "
+
+     echo -e "\n"
+
+
+      echo -e  ''${GREEN}"##    ##    ###    ##       ####   ######  ######## ##########     ## ########"
+      echo -e  ''${GREEN}"##   ##    ## ##   ##        ##    ##  ##  ##         ##    ##     ## ##     ##"
+      echo -e  ''${GREEN}"##  ##    ##   ##  ##        ##    ##      ##         ##    ##     ## ##     ##"
+      echo -e  ''${WHITE}"#####    ##     ## ##        ##    ######  ######     ##    ##     ## ########"
+      echo -e  ''${WHITE}"##  ##   ######### ##        ##        ##  ##         ##    ##     ## ##"
+      echo -e  ''${RED}"##   ##  ##     ## ##        ##    ##  ##  ##         ##    ##     ## ##"
+      echo -e  ''${RED}"##   ##  ##     ## ######## ####   ######  ########   ##    ######### ##"
+      sleep 1s
+    else
+
+      TEXT="##    ##    ###    ##      ##    ###    ##     ## ####  ######"
+      centrar--
+      printf "%${A}s$GREEN $TEXT\n"
+
+      TEXT=" ##   ##    ## ##   ##  ##  ##   ## ##    ##   ##   ##  ##    ##"
+      centrar--
+      printf "%${A}s$GREEN $TEXT\n"
+
+      TEXT="##  ##    ##   ##  ##  ##  ##  ##   ##    ## ##    ##  ##      "
+      centrar--
+      printf "%${A}s$GREEN $TEXT\n"
+
+      TEXT="#####    ##     ## ##  ##  ## ##     ##    ###     ##   ######"
+      centrar--
+      printf "%${A}s$WHITE $TEXT\n"
+
+      TEXT=" ##  ##   ######### ##  ##  ## #########   ## ##    ##        ##"
+      centrar--
+      printf "%${A}s$WHITE $TEXT\n"
+
+      TEXT=" ##   ##  ##     ## ##  ##  ## ##     ##  ##   ##   ##  ##    ## "
+      centrar--
+      printf "%${A}s$RED $TEXT\n"
+
+      TEXT="##    ## ##     ##  ###  ###  ##     ## ##     ## ####  ######"
+      centrar--
+      printf "%${A}s$RED $TEXT\n"
+
+      echo -e "\n"
+
+      TEXT="##    ##    ###    ##       ####   ######  ######## ######## ##     ## ########"
+      centrar--
+      printf "%${A}s$GREEN $TEXT\n"
+
+      TEXT=" ##   ##    ## ##   ##        ##    ##  ##   ##         ##    ##     ## ##     ##"
+      centrar--
+      printf "%${A}s$GREEN $TEXT\n"
+
+      TEXT=" ##  ##    ##   ##  ##        ##    ##       ##         ##    ##     ## ##     ##"
+      centrar--
+      printf "%${A}s$GREEN $TEXT\n"
+
+      TEXT="#####    ##     ## ##        ##    ######  ######      ##    ##     ## ########"
+      centrar--
+      printf "%${A}s$WHITE $TEXT\n"
+
+      TEXT="##  ##   ######### ##        ##         ## ##          ##    ##     ## ##    "
+      centrar--
+      printf "%${A}s$WHITE$TEXT\n"
+
+      TEXT="##   ##  ##     ## ##        ##    ##   ## ##          ##    ##     ## ##    "
+      centrar--
+      printf "%${A}s$RED$TEXT\n"
+
+      TEXT="##   ##  ##     ## ######## ####   ######  ########    ##     #######  ##    "
+      centrar--
+      printf "%${A}s$RED$TEXT\n"
+      sleep 1s
+
+    fi
+
+}
+
+notice--(){
+
+
+  printf "$BLUE\n"
+  #  big chain of ####
+  printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
+  # Middle ##  ; use 5 for full width for ##, or 7 for ###
+  printf "\n##" && printf "%$((M - 5))s ##"
+  # MAIN TEST, remember to subtract the size of "TEST"
+  printf "\n$BLUE## $RED $TEXT" && printf "$BLUE%$((M - ${#TEXT} - 7))s ##"
+  ##
+  printf "\n##" && printf "% $((M - 5))s ##"
+  printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
+  printf "\n\n"
+
+}
+
+
+heading--(){
+
+  TEXT="Kawaxi's Kali Linux Rolling 2016.2 Setup Script! V. 1.0 "
+  # Center text
+  span=$(((M + ${#TEXT}) / 2 ))
+  # Making sure to center if heading exists
+  A=$((span - ${#TEXT} - 3 ))
+
+  printf "$GREEN\n"
+  printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
+  printf "\n###" && printf "%$((M - 7))s ###"
+
+  #CENTER your text
+  printf "\n$GREEN###" && printf "%${A}s $TEXT" && printf "$GREEN%$((span -${#TEXT} - 5 ))s ###"
+
+
+  TEXT='Make sure to run it as RooT!!   '
+  # Center text
+  span=$(((M + ${#TEXT}) / 2 ))
+  A=$((span - ${#TEXT} - 3 ))
+  printf "\n$GREEN###" && printf "%${A}s $TEXT" && printf "$GREEN%$((span -${#TEXT} - 5 ))s ###"   #   CENTER your text
+  printf "\n###" && printf "%$((M - 7))s ###"
+  printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
+  printf "\n\n"
+
+}
