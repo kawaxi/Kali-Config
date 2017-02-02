@@ -2,7 +2,8 @@
 
 # bash Start -f --winkeys --keyboard es --timezone America/Mexico_City --openvas
 
-#--- Local information
+# ---------- Intense Colors ---------- #
+
 #--- Using an Apple/Macintosh keyboard (non VM)?              [ --osx ]
 keyboardApple=false
 #--- Using a Windows Keyboard ? 			                       	[ --winkeys ]
@@ -12,8 +13,9 @@ keyboardLayout=""
 #--- Set timezone location                                    [ --timezone America/Mexico_City ]
 timezone=""
 
-#--- Optional steps
-#--- Configures Burp Suite (for Burp Pro users...)              [ --burp ]
+# ---------- Optional Steps ---------- #
+
+#--- Configures Burp Suite (for Burp Pro users...)            [ --burp ]
 burpFree=false
 #--- Set static & lock DNS name server                        [ --dns ]
 hardenDNS=false
@@ -24,7 +26,10 @@ f=false
 FULL=0
 UPDATE=0
 
-#---  Normal Colors
+
+
+# ---------- Regular Colors ---------- #
+
 #--- Issues/Errors
 RED="\033[01;31m"
 #--- Success
@@ -42,7 +47,8 @@ WHITE="\033[1;37m"
 CYAN='\033[0;36m'
 MAGENTA='\033[00;35m'
 
-#Intense Colors
+# ---------- Intense Colors ---------- #
+
 #--- Black
 IBLACK='\033[0;90m'
 #--- Red
@@ -64,7 +70,8 @@ On_Cyan='\033[46m'
 On_White='\033[47m'
 On_Blue='\033[44m'
 
-#--- Underline Colors
+# ---------- Underlined Colors ---------- #
+
 #--- Black
 UBlack='\033[4;30m'
 #--- Red
@@ -83,7 +90,7 @@ UCyan='\033[4;36m'
 UWhite='\033[4;37m'
 
 
-#--- Declaring ------------------------------------------------------------#
+# ---------- Declaring ---------- #
 
 source lib/visual
 source lib/help
@@ -98,7 +105,7 @@ M=${COLUMNS:-$(tput cols)}
 #--- Where are we up to?
 STAGE=0
 
-#--- TOTAL STAGES FOR TOTAL
+# ---------- Total stages for total ---------- #
 #--- Number of STAGES in Config File
 C=19
 #--- Number of STAGES In Start File
@@ -110,11 +117,10 @@ X=17
 #--- Number of STAGES In FUll File
 F=58
 
-#### Funcionts , Banners, Header, ####
+#### This is where funcionts , Banners and Header were ####
 
 
-#-Arguments------------------------------------------------------------#
-
+# ---------- Arguments ---------- #
 
 #--- Read command line arguments
   if ((!$#)) ; then # No arguments?
@@ -236,8 +242,7 @@ F=58
 
 
 
-#-Update your system-------------------------------------------------------------#
-
+# ---------- Update your system ---------- #
 
   if  [[ "${UPDATE}" -ge 3   ]]; then
     TEXT="Initiating System's Update, this will take a while!"
@@ -253,16 +258,16 @@ F=58
   	  fi
   fi
 
-#-Defaults-------------------------------------------------------------#
+# ---------- Defaults ---------- #
 
 
 
-#-Start----------------------------------------------------------------#
+# ---------- Start ---------- #
 
 
 start_time=$(date +%s) #Used for time Stats
 
-#--- so you can watch progress , another options is  gsettings set org.gnome.desktop.lockdown disable-lock-screen true
+#--- So you can watch progress , another options is  gsettings set org.gnome.desktop.lockdown disable-lock-screen true
 gsettings set org.gnome.desktop.screensaver lock-enabled false
 
 #---if using 32 bits Create /usr/local/bin , our Script uses it to install apps.
@@ -315,7 +320,7 @@ elif (dmidecode | grep -iq virtualbox); then
 fi
 
 
-#-Configure your system---------------------------------------------------------------#
+# ---------- Configure your system ---------- #
   TEXT=' We are configuring your System , go get a drink.'
   heading --
   configure--
@@ -324,7 +329,7 @@ fi
   notice--
 
 
-#### END OF CONFIGURATION  ####
+# ---------- End of Configuration ---------- #
 
 if  [[ "${FULL}" -ge 3   ]]; then
   TEXT='Initiating Express Module, Apps will be Installed'
@@ -345,8 +350,7 @@ else
 fi
 
 
-
-#--- Clean the system
+# ---------- Clean the system---------- #
 (( STAGE++ )); echo -e "\n\n ${YELLOW}[*]${RESET} (${STAGE}/${TOTAL}) ${ORANGE}Cleaning the system ${RESET}"
 #--- Clean package manager
 for FILE in clean autoremove; do apt -y -qq "${FILE}"; done
@@ -362,12 +366,13 @@ for i in $(cut -d: -f6 /etc/passwd | sort -u); do
 done
 
 
-#--- Time taken
+# ---------- Time taken ---------- #
 finish_time=$(date +%s)
 echo -e "\n\n ${YELLOW}[i]${RESET} Time (roughly) taken: ${YELLOW}$(( $(( finish_time - start_time )) / 60 )) minutes${RESET}"
 
 
-#--- Done!
+# ---------- Done ---------- #
+
 echo -e "\n ${YELLOW}[i]${RESET} Don't forget to:"
 echo -e " ${YELLOW}[i]${RESET} + Check the above output (Did everything install? Any errors? (${RED}HINT: What's in RED${RESET}?)"
 echo -e " ${YELLOW}[i]${RESET} + Manually install: Nessus, Nexpose, and/or Metasploit Community"
