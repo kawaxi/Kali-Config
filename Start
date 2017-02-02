@@ -1,1 +1,385 @@
+#!/bin/bash
 
+# bash Start -f --winkeys --keyboard es --timezone America/Mexico_City --openvas
+
+#--- Local information
+#--- Using an Apple/Macintosh keyboard (non VM)?              [ --osx ]
+keyboardApple=false
+#--- Using a Windows Keyboard ? 			                       	[ --winkeys ]
+keyboardWin=false
+#--- Set keyboard layout                                      [ --keyboard es]
+keyboardLayout=""
+#--- Set timezone location                                    [ --timezone America/Mexico_City ]
+timezone=""
+
+#--- Optional steps
+#--- Configures Burp Suite (for Burp Pro users...)              [ --burp ]
+burpFree=false
+#--- Set static & lock DNS name server                        [ --dns ]
+hardenDNS=false
+#--- Install & configure OpenVAS 				                      [ --openvas ]
+openVAS=false
+#--- Full install?
+f=false
+FULL=0
+UPDATE=0
+
+#---  Normal Colors
+#--- Issues/Errors
+RED="\033[01;31m"
+#--- Success
+GREEN="\033[01;32m"
+#--- Warnings/Information
+YELLOW="\033[01;33m"
+#--- Heading
+BLUE="\033[00;94m"
+#--- Highlight
+BOLD="\033[01;01m"
+#--- Normal
+RESET="\033[00m"
+ORANGE="\033[0;33m"
+WHITE="\033[1;37m"
+CYAN='\033[0;36m'
+MAGENTA='\033[00;35m'
+
+#Intense Colors
+#--- Black
+IBLACK='\033[0;90m'
+#--- Red
+IRED='\033[0;91m'
+#--- Green
+IGREEN='\033[0;92m'
+#--- Yellow
+IYELLOW='\033[0;93m'
+#--- Blue
+IBLUE='\033[0;94m'
+#--- Purple
+IPurple='\033[0;95m'
+#--- Cyan
+ICYAN='\033[0;96m'
+#--- White
+IWHITE='\033[0;97m'
+On_Yellow='\033[43m'
+On_Cyan='\033[46m'
+On_White='\033[47m'
+On_Blue='\033[44m'
+
+#--- Underline Colors
+#--- Black
+UBlack='\033[4;30m'
+#--- Red
+URed='\033[4;31m'
+#--- Green
+UGreen='\033[4;32m'
+#--- Yellow
+UYellow='\033[4;33m'
+#--- Blue
+UBlue='\033[4;34m'
+#--- Purple
+UPurple='\033[4;35m'
+#--- Cyan
+UCyan='\033[4;36m'
+#--- White
+UWhite='\033[4;37m'
+
+
+#--- Declaring ------------------------------------------------------------#
+
+source lib/visual
+source lib/help
+source lib/update
+source lib/config
+source lib/express
+source lib/full
+
+
+#--- Using our full width
+M=${COLUMNS:-$(tput cols)}
+#--- Where are we up to?
+STAGE=0
+
+#--- TOTAL STAGES FOR TOTAL
+#--- Number of STAGES in Config File
+C=19
+#--- Number of STAGES In Start File
+S=4
+#--- Number of STAGES In Update File
+U=2
+#--- Number of STAGES In Express File
+X=17
+#--- Number of STAGES In FUll File
+F=58
+
+#### Funcionts , Banners, Header, ####
+
+
+#-Arguments------------------------------------------------------------#
+
+
+#--- Read command line arguments
+  if ((!$#)) ; then # No arguments?
+    banner--
+    heading--
+    shorth--
+    exit 1
+
+  else
+#--- Take the argument
+  	while [[ "${#}" -gt 0 && ."${1}" == .-* ]]; do
+    	opt="${1}";
+    	shift;
+    	case "$(echo ${opt} | tr '[:upper:]' '[:lower:]')" in
+      	-|-- ) break 2;;
+
+   	   -winkeys|--winkeys )
+  	      keyboardWin=true;;
+  	    -osx|--osx )
+  	      keyboardApple=true;;
+  	    -apple|--apple )
+  	      keyboardApple=true;;
+  	    -dns|--dns )
+  	      hardenDNS=true;;
+  	    -openvas|--openvas )
+  	      openVAS=true;;
+
+        -msf|--msf )
+    	      msF=true;;
+
+  	    -burp|--burp )
+  	      burpFree=true;;
+
+  	    -keyboard|--keyboard )
+  	      keyboardLayout="${1}"; shift;;
+
+  	    -keyboard=*|--keyboard=* )
+  	      keyboardLayout="${opt#*=}";;
+  	    -timezone|--timezone )
+  	      timezone="${1}"; shift;;
+
+  	    -timezone=*|--timezone=* )
+  	      timezone="${opt#*=}";;
+  	    -f=*|--f=* )
+  		  f=true;;
+
+  	     -h)
+          banner--
+          heading--
+          help--;;
+
+  	     -f)
+          banner--
+          heading--
+          TEXT=' Full Install selected, this will take a while, please wait patienly '
+          notice--
+  		    UPDATE=3
+          TOTAL=$((S + C + U + X + F))
+  		    FULL=3;;
+
+  	     -x)
+          TEXT='[*] Initiating express module with update !'
+          notice--
+          FULL=1
+          TOTAL=$((S + C + U + X ))
+          UPDATE=3;;
+
+  	     -xx)
+          banner--
+          TEXT="[*] Initiating express module with no update !"
+          notice--
+          FULL=1
+          TOTAL=$((S + C + X ))
+          UPDATE=1;;
+
+  	      *)
+          banner--
+          TEXT="¡¡¡¡  Please provide a valid argument for the script !!!!"
+          notice--
+          shorth--
+
+  	            exit 1;;
+  	   esac
+  	done
+
+  fi
+
+
+  time=$(date +%s) #Used for time Stats
+
+
+
+#--- Are we running as root ?
+  if [[ "${EUID}" -ne 0 ]]; then
+    echo -e ' '${RED}'[!]'${RESET}" This script must be ${RED}run as root${RESET}" 1>&2
+    echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
+    exit 1
+  else
+    echo -e "${BLUE}[*]${RESET}${BOLD}Kali Linux rolling post-install script${RESET}"
+  fi
+
+#--- Fix display output for GUI programs In case your Creating this VM remotely (SSH)
+  export DISPLAY=:0.0
+  export TERM=xterm
+
+
+#--- Check user inputs
+  if [[ -n "${timezone}" && ! -f "/usr/share/zoneinfo/${timezone}" ]]; then
+    echo -e ' '${RED}'[!]'${RESET}" It Looks like the ${RED}timezone '${timezone}'${RESET} is incorrect/not supported (Example: ${BOLD}America/Mexico_City ${RESET})" 1>&2
+    echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
+    exit 1
+  elif [[ -n "${keyboardLayout}" && -e /usr/share/X11/xkb/rules/xorg.lst ]]; then
+    if ! $(grep -q " ${keyboardLayout} " /usr/share/X11/xkb/rules/xorg.lst); then
+      echo -e ' '${RED}'[!]'${RESET}" It Looks like the ${RED}keyboard layout '${keyboardLayout}'${RESET} is incorrect/not supported (Example: ${BOLD}gb${RESET})" 1>&2
+      echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
+      exit 1
+    fi
+  fi
+
+
+
+#-Update your system-------------------------------------------------------------#
+
+
+  if  [[ "${UPDATE}" -ge 3   ]]; then
+    TEXT="Initiating System's Update, this will take a while!"
+    notice--
+  	update--
+
+  else
+
+  	  if [[ "${UPDATE}" -ge 1  ]]; then
+        	heading--
+        TEXT="We won't update the system this time ....Skipping!"
+  	    notice--
+  	  fi
+  fi
+
+#-Defaults-------------------------------------------------------------#
+
+
+
+#-Start----------------------------------------------------------------#
+
+
+start_time=$(date +%s) #Used for time Stats
+
+#--- so you can watch progress , another options is  gsettings set org.gnome.desktop.lockdown disable-lock-screen true
+gsettings set org.gnome.desktop.screensaver lock-enabled false
+
+#---if using 32 bits Create /usr/local/bin , our Script uses it to install apps.
+if [[ $(getconf LONG_BIT) = 32 ]]; then
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Creating /usr/local/bin Directory... ${RESET}"
+mkdir /usr/local/bin
+fi
+
+
+#--- What modules are we Skipping?
+if [ "${burpFree}" != "true" ]; then
+  echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping Burp Suite${RESET} (missing: '$0 ${BOLD}--burp${RESET}')..." 1>&2
+  fi
+if [ "${openVAS}" != "true" ]; then
+  echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping OpenVas${RESET} (missing: '$0 ${BOLD}--openvas${RESET}')..." 1>&2
+  fi
+if [ "${msF}" != "true" ]; then
+  echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping Metasploit${RESET} (missing: '$0 ${BOLD}--msf${RESET}')..." 1>&2
+  fi
+
+
+#--- Check to see if Kali is in a VM. If so, install "Virtual Machine Addons/Tools" for a "better" virtual experiment
+if (dmidecode | grep -iq vmware); then
+  #--- Install virtual machines tools ~ http://docs.kali.org/general-use/install-vmware-tools-kali-guest
+  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing VMware's (open) virtual machine tools${RESET}"
+  apt -y -qq install open-vm-tools-desktop fuse \
+    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+  apt -y -qq install make \
+    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2    # There's a nags afterwards
+  #--- Shared folders support for Open-VM-Tools (some odd bug)
+  file=/usr/local/sbin/mount-shared-folders; [ -e "${file}" ] && cp -n $file{,.bkup}
+  cat <<EOF > "${file}" \
+    || echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
+#!/bin/bash
+vmware-hgfsclient | while read folder; do
+  echo "[i] Mounting \${folder}   (/mnt/hgfs/\${folder})"
+  mkdir -p "/mnt/hgfs/\${folder}"
+  umount -f "/mnt/hgfs/\${folder}" 2>/dev/null
+  vmhgfs-fuse -o allow_other -o auto_unmount ".host:/\${folder}" "/mnt/hgfs/\${folder}"
+done
+sleep 2s
+EOF
+  chmod +x "${file}"
+  ln -sf "${file}" /root/Desktop/mount-shared-folders.sh
+elif (dmidecode | grep -iq virtualbox); then
+  #--- Installing VirtualBox Guest Additions.   Note: Need VirtualBox 4.2.xx+ for the host (http://docs.kali.org/general-use/kali-linux-virtual-box-guest)
+  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing VirtualBox's guest additions${RESET}"
+  apt -y -qq install virtualbox-guest-x11 \
+    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+fi
+
+
+#-Configure your system---------------------------------------------------------------#
+  TEXT=' We are configuring your System , go get a drink.'
+  heading --
+  configure--
+
+  TEXT="!! System's Configuration done!!"
+  notice--
+
+
+#### END OF CONFIGURATION  ####
+
+if  [[ "${FULL}" -ge 3   ]]; then
+  TEXT='Initiating Express Module, Apps will be Installed'
+  notice--
+	express--
+  TEXT='Initiating Full Module, All the rest of the software will be installed'
+  notice--
+  full--
+
+else
+
+  if [[ "${FULL}" -ge 1  ]]; then
+    heading--
+    TEXT='Initiating Express Module, Only Basic Apps will be installed'
+    notice--
+    express--
+	 fi
+fi
+
+
+
+#--- Clean the system
+(( STAGE++ )); echo -e "\n\n ${YELLOW}[*]${RESET} (${STAGE}/${TOTAL}) ${ORANGE}Cleaning the system ${RESET}"
+#--- Clean package manager
+for FILE in clean autoremove; do apt -y -qq "${FILE}"; done
+apt -y -qq purge $(dpkg -l | tail -n +6 | egrep -v '^(h|i)i' | awk '{print $2}')   # Purged packages
+#--- Update slocate database
+updatedb
+#--- Reset folder location
+cd ~/ &>/dev/null
+#--- Remove any history files (as they could contain sensitive info)
+history -c 2>/dev/null
+for i in $(cut -d: -f6 /etc/passwd | sort -u); do
+  [ -e "${i}" ] && find "${i}" -type f -name '.*_history' -delete
+done
+
+
+#--- Time taken
+finish_time=$(date +%s)
+echo -e "\n\n ${YELLOW}[i]${RESET} Time (roughly) taken: ${YELLOW}$(( $(( finish_time - start_time )) / 60 )) minutes${RESET}"
+
+
+#--- Done!
+echo -e "\n ${YELLOW}[i]${RESET} Don't forget to:"
+echo -e " ${YELLOW}[i]${RESET} + Check the above output (Did everything install? Any errors? (${RED}HINT: What's in RED${RESET}?)"
+echo -e " ${YELLOW}[i]${RESET} + Manually install: Nessus, Nexpose, and/or Metasploit Community"
+echo -e " ${YELLOW}[i]${RESET} + Agree/Accept to: Maltego, OWASP ZAP, w3af, etc"
+echo -e " ${YELLOW}[i]${RESET} + Setup git:   ${YELLOW}git config --global user.name <name>;git config --global user.email <email>${RESET}"
+echo -e " ${YELLOW}[i]${RESET} + ${BOLD}Change default passwords${RESET}: PostgreSQL/MSF, MySQL, OpenVAS, BeEF XSS, etc"
+echo -e " ${YELLOW}[i]${RESET} + ${YELLOW}Reboot${RESET}"
+(dmidecode | grep -iq virtual) \
+  && echo -e " ${YELLOW}[i]${RESET} + Take a snapshot (Virtual machine detected)"
+
+echo -e '\n'${BLUE}'[*]'${RESET}' '${BOLD}'Done!'${RESET}'\n\a'
+
+
+
+exit 0
