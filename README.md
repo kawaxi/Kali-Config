@@ -37,7 +37,7 @@ Just do:
 
 For help do:
 
-# start -h
+# Start -h
 
 
 
