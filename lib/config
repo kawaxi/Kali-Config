@@ -56,7 +56,7 @@ fi
 
 
 #adding favorites to our Gnome  FOR 64bits
-gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop','atom.desktop', 'icedove.desktop', 'shutter.desktop' , 'hexchat.desktop']"
+gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop','atom.desktop', 'keepnote.desktop', 'icedove.desktop', 'shutter.desktop' , 'hexchat.desktop']"
 
 #adding favorites to our Gnome  FOR 32bits
 #gsettings get org.gnome.shell favorite-apps "['firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop', 'icedove.desktop', 'shutter.desktop', 'hexchat.desktop']"
