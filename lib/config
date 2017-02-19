@@ -38,10 +38,10 @@ if [[ $(which gnome-shell) ]]; then
   gsettings set org.gnome.shell.extensions.dash-to-dock intellihide true
   gsettings set org.gnome.shell.extensions.dash-to-dock autohide true
   gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
-  gsettings set org.gnome.shell.extensions.dash-to-dock intellihide-mode 'ALL_WINDOWS'
+  gsettings set org.gnome.shell.extensions.dash-to-dock intellihide-mode 'FOCUS_APPLICATION_WINDOWS'
   gsettings set org.gnome.shell.extensions.dash-to-dock require-pressure-to-show false
   gsettings set org.gnome.shell.extensions.dash-to-dock background-color '#3465a4'
-  gsettings set org.gnome.shell.extensions.dash-to-dock show-delay 0.200
+  gsettings set org.gnome.shell.extensions.dash-to-dock show-delay 0.15000000000000002
   gsettings set org.gnome.shell.extensions.dash-to-dock hide-delay 0.200
 
 ##### Disable screensaver
