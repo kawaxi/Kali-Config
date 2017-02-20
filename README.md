@@ -51,8 +51,7 @@ Pending Ideas:
 * Make script to trap TERM signal.
 
 # Change Log
-
-#Feb 2nd 2017
+Feb 2nd 2017
 * Fixed problem with  gsettings and Dash to Dock
 * Fixed linked for pshtoolkit
 * Added Bookmarks for nautilus
