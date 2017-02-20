@@ -21,6 +21,8 @@ burpFree=false
 hardenDNS=false
 #--- Install & configure OpenVAS 				                      [ --openvas ]
 openVAS=false
+#---Install Metasploit?
+msF=false
 #--- Full install?
 f=false
 FULL=0
