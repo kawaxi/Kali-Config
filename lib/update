@@ -22,7 +22,7 @@ update--()
   #--- Update
    for FILE in clean autoremove; do apt -y -qq "${FILE}"; done         # Clean up      clean remove autoremove autoclean
   export DEBIAN_FRONTEND=noninteractive
-  apt -qq update && APT_LISTCHANGES_FRONTEND=none apt -o Dpkg::Options::="--force-confnew" -y dist-upgrade --fix-missing 2>&1 \
+  apt -qq update && APT_LISTCHANGES_FRONTEND=none apt -o Dpkg::Options::="--force-confnew" -y \
     || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
   ####--- Cleaning up temp stuff
   for FILE in clean autoremove; do apt -y -qq "${FILE}"; done         # Clean up - clean remove autoremove autoclean
