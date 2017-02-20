@@ -1,4 +1,5 @@
 
+#! /bin/bash
 
 
 configure--()
@@ -320,7 +321,7 @@ echo "[*] Setting up Bookmarks"
    fi
    echo file:/// / > ~/.config/gtk-3.0/bookmarks
    echo file:///etc/ /etc >> ~/.config/gtk-3.0/bookmarks
-   echo file:///usr/ /usr/share >> ~/.config/gtk-3.0/bookmarks
+   echo file:///usr/share /usr/share >> ~/.config/gtk-3.0/bookmarks
    echo file:///var/www/html www >> ~/.config/gtk-3.0/bookmarks
    echo file:///usr/share Kali Tools >> ~/.config/gtk-3.0/bookmarks
    echo file:///tmp  /tmp >> ~/.config/gtk-3.0/bookmarks
