@@ -51,12 +51,20 @@ Pending Ideas:
 * Make script to trap TERM signal.
 
 # Change Log
-Feb 2nd 2017
+
+Feb 20th 
+* Fixed Little Issue with Irc peventsfile.
+
+Feb 19th 2017
 * Fixed problem with  gsettings and Dash to Dock
 * Fixed linked for pshtoolkit
 * Added Bookmarks for nautilus
 * Added Wallpapers
 * Random Wallpapers for Gnome enabled
+
+Feb 1st 2017
+* Fixed Commenting format in Start File.
+* Fixed Several minor issues.
 
 
 
