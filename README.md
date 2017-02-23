@@ -52,6 +52,9 @@ Pending Ideas:
 
 # Change Log
 
+Feb 22nd 
+* Copied Windows-binaries to FTP, TFTP, and Apache services folder.
+
 Feb 20th 
 * Fixed Little Issue with Irc peventsfile.
 
