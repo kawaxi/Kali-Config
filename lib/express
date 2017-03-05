@@ -3,56 +3,56 @@
 
 express--(){
 
-
-
-###### Install Atom   - A Hackable Text Editor  ----    Use your Own Configuration
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing ${GREEN} Atom ${ORANGE} ~ GUI text editor ${RESET}"
-timeout 300 curl --progress -k -L -f "https://atom.io/download/deb" > /tmp/atom.deb \
-  || echo -e ' '${RED}'[!]'${RESET}" Issue downloading atom.deb" 1>&2
-if [ -e /tmp/atom.deb ]; then
-  dpkg -i /tmp/atom.deb
-  #--- Create config file
-  mkdir -p ~/.atom/
-  file=~/.atom/config.cson
-  if [[ -f "${file}" ]]; then
-    echo -e ' '${RED}'[!]'${RESET}" ${file} detected. Skipping..." 1>&2
-  else
-    cat <<EOF > "${file}"
-      "*":
-        core:
-          telemetryConsent: "no"
-          themes: [
-            "one-dark-ui"
-            "atom-dark-syntax"
-          ]
-        editor:
-          scrollSensitivity: 60
-          showIndentGuide: true
-        welcome:
-          showOnStartup: false
+#--- Using x64?
+if [[ "$(uname -m)" == 'x86_64' ]]; then
+  #### Install Atom   - A Hackable Text Editor  ----    Use your Own Configuration
+  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing ${GREEN} Atom ${ORANGE} ~ GUI text editor ${RESET}"
+  timeout 300 curl --progress -k -L -f "https://atom.io/download/deb" > /tmp/atom.deb \
+    || echo -e ' '${RED}'[!]'${RESET}" Issue downloading atom.deb" 1>&2
+  if [ -e /tmp/atom.deb ]; then
+    dpkg -i /tmp/atom.deb
+    #--- Create config file
+    mkdir -p ~/.atom/
+    file=~/.atom/config.cson
+    if [[ -f "${file}" ]]; then
+      echo -e ' '${RED}'[!]'${RESET}" ${file} detected. Skipping..." 1>&2
+    else
+      cat <<EOF > "${file}"
+        "*":
+          core:
+            telemetryConsent: "no"
+            themes: [
+              "one-dark-ui"
+              "atom-dark-syntax"
+            ]
+          editor:
+            scrollSensitivity: 65
+            showIndentGuide: true
+          welcome:
+            showOnStartup: false
 
 EOF
+    fi
+
   fi
-
-
-  #--- Add to panel (GNOME)
-  #export DISPLAY=:0.0
-  [[ $(which gnome-shell) ]] \
-    && gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/'org.gnome.gedit.desktop'/'atom.desktop'/")"
+else
+  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing ${GREEN} Sublime Text ${ORANGE} ~ GUI text editor ${RESET}"
+  timeout 300 curl --progress -k -L -f "https://download.sublimetext.com/sublime-text_build-3126_i386.deb" > /tmp/sublime.deb \
+    || echo -e ' '${RED}'[!]'${RESET}" Issue downloading sublime.deb" 1>&2
+    if [ -e /tmp/sublime.deb ]; then
+      dpkg -i /tmp/sublime.deb
+    fi
 
 fi
 
 
-# -- Installing Hexchat
+#### Installing Hexchat
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing (GNOME) Hexchat ${ORANGE} ~ IRC Client ${RESET}"
 apt-get install hexchat -y
 #--- Add Hexchat to panel (GNOME)
 # export DISPLAY=:0.0${RESET}
-[[ $(which gnome-shell) ]] \
-  && gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/'org.gnome.gedit.desktop'/'hexchat.desktop'/")"
 
-
-#CONFIGURING HEXCHAT
+####CONFIGURING HEXCHAT
 # export DISPLAY=:0.0
 
 echo -e "\n ${GREEN} [*] ${ORANGE}Let's Configure Hexchat ${RESET}"
@@ -61,14 +61,14 @@ apt-get -y -qq install xdotool  \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
 
-# making sure to open the app to so the app can creat the folder with the files
+#--- making sure to open the app to so the app can creat the folder with the files
 hexchat & HEXPID=$! >/dev/null 2>&1
 
-# Initiating Hexchat and saving the pid.
+#--- Initiating Hexchat and saving the pid.
 echo -e "${ORANGE}[*]Our PID for Hexchat is $HEXPID ${RESET}"
 
 
-#founding our windows ID for our PID
+#---founding our windows ID for our PID
 HEXWINID=$(xdotool search --onlyvisible --sync --pid ${HEXPID} | tail -1)
 echo -e "${ORANGE}[*]We found our window ID for Hexchat PID : $HEXWINID ${RESET}\n"
 
@@ -80,7 +80,7 @@ sleep 15
 
 timeout 5 killall -9 -q -w hexchat
 
-# HEXCHAT GENERAL CONFIGURATION; YOU COULD ALSO LET HEXCHAT TO GENERATE IT.
+#--- HEXCHAT GENERAL CONFIGURATION; YOU COULD ALSO LET HEXCHAT TO GENERATE IT.
 file=~/.config/hexchat/hexchat.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
   echo -e ' '${GREEN}'[*]'${WHITE}" ${file} ${ORANGE} Detected. Replacing ..." ${RESET} 1>&2
@@ -91,7 +91,7 @@ else
   || echo -e ' '${RED}'[!] Issue Downloading file'${RESET} 1>&2
 fi
 
-# HEXCHAT Friends Lst     ### PLACE YOUR FRINDS LIST IN THIS SECTION
+#--- HEXCHAT Friends Lst     ### PLACE YOUR FRINDS LIST IN THIS SECTION
 file=~/.config/hexchat/notify.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
   echo -e ' '${GREEN}'[!]'${WHITE}" ${file} ${ORANGE} detected. Skipping..." ${RESET} 1>&2
@@ -106,9 +106,11 @@ friend3
 EOF
 fi
 
-# Add your own Servers  List, you can either add lines, create or download the file.
+#--- Add your own Servers  List, you can either add lines, create or download the file.
 
-## Dont forget to review this lines.
+#--- Please remember to change this so you can clone it instead.
+
+#--- Dont forget to review this lines and fill it with your own info.
 file=~/.config/hexchat/servlist.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
   ([[ -e "${file}" && "$(tail -c 1 ${file})" != "" ]]) && echo >> "${file}"
@@ -153,7 +155,7 @@ chmod 755 $file
 python $file
 rm $file
 
-#Create your colors files
+#--- Create your colors files
 file=~/.config/hexchat/colors.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
   echo -e ' '${GREEN}'[!]'${RESET}" ${file} ${ORANGE} Detected. Skipping..."  ${RESET} 1>&2
@@ -208,7 +210,7 @@ EOF
 fi
 
 
-# Configure your Pevents File by replacing lines of the file or downloading your own file.
+#--- Configure your Pevents File by replacing lines of the file or downloading your own file.
 
 file=~/.config/hexchat/pevents.conf
 if [[ -f "${file}" ]]; then
@@ -237,10 +239,10 @@ python $file
 rm $file
 
 else
-  # We download the files or we create them, creating them will add more than 400  lines.
+  #--- We download the files or we create them, creating them will add more than 400  lines.
   file=~/.config/hexchat/pevents.conf
   echo -e "${GREEN} [*] ${WHITE}Downloading pevents.conf ${ORANGE} File  Downloaded ${RESET}"
-  timeout 300 curl --progress -k -L -f "https://raw.githubusercontent.com/kawaxi/Test/testing-2/pevents.conf" > "${file}" \
+  timeout 300 curl --progress -k -L -f "https://raw.githubusercontent.com/kawaxi/Kali-Setup/master/pevents.conf" > "${file}" \
   || echo -e ' '${RED}'[!] Issue Downloading file'${RESET} 1>&2
 fi
 
@@ -251,7 +253,7 @@ notice--
 
 
 ##### Install Terminator (GNOME)
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})  ${GREEN} Installing (GNOME)Terminator ${ORANGE} ~ multiple terminals in a single window ${RESET}"
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})  ${GREEN} Installing (GNOME)Terminator ${ORANGE} ~ Multiple terminals in a single window ${RESET}"
 apt -y -qq install terminator \
   || echo -e ' '${RED}'[!] Issue with apt install'  1>&2
 #--- Configure terminator
@@ -299,15 +301,8 @@ gsettings set org.gnome.desktop.default-applications.terminal exec /usr/bin/term
 gsettings set org.gnome.desktop.default-applications.terminal exec-arg "-x"
 
 
-#--- Add Terminator to panel (GNOME)
-  export DISPLAY=:0.0
-  [[ $(which gnome-shell) ]] \
-    && gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed "s/'org.gnome.gedit.desktop'/'terminator.desktop'/")"
-
-
-
 ##### Install Conky
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) Installing ${GREEN}Conky ${ORANGE} ~ GUI desktop monitor ${RESET} "
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Conky ${ORANGE} ~ GUI desktop monitor ${RESET} "
 export DISPLAY=:0.0
 apt -y -qq install conky \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -317,7 +312,6 @@ if [[ -f "${file}" ]]; then
   echo -e ' '${RED}'[!]'${RESET}" ${file} detected. Skipping..." 1>&2
 else
   cat <<EOF > "${file}"
---# Useful: http://forums.opensuse.org/english/get-technical-help-here/how-faq-forums/unreviewed-how-faq/464737-easy-configuring-conky-conkyconf.html
 conky.config = {
     background = false,
     font = 'monospace:size=8:weight=bold',
@@ -436,48 +430,52 @@ if [ -e "${file}" ]; then
     || sed -i 's#<property name="\&lt;Alt\&gt;F2" type="string" value="xfrun4"/>#<property name="\&lt;Alt\&gt;F2" type="string" value="xfrun4"/>\n      <property name="\&lt;Primary\&gt;r" type="string" value="/usr/local/bin/start-conky"/>#' "${file}"
 fi
 
+#### Installing Tilda
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Tilda ${ORANGE} ~ Pop Up Terminal Emulator ${RESET}"
+apt-get -y -q install tilda
+#Adding Tilda to startup
+cp /usr/share/applications/tilda.desktop ~/.config/autostart/
 
-##### Installing  Icedove (Thunderbird)
-
+#### Installing  Icedove (Thunderbird)
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Icedove ${ORANGE} ~ Email Client ${RESET} "
 #apt -y -qq install thunderbird
 apt -y -qq install icedove-enigmail \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
 
-##### Install libreoffice
+#### Install libreoffice
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing LibreOffice${ORANGE} ~ GUI Office Suite${RESET}"
 apt -y -qq install libreoffice \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
-##### Install asciinema  -- Terminal Recorder
+#### Install asciinema  -- Terminal Recorder
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing asciinema ${ORANGE} ~ CLI Terminal Recorder${RESET}"
 curl -s -L https://asciinema.org/install | sh
 
-##### Install Shutter   -- Take snapshots.
+#### Install Shutter   -- Take snapshots.
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing Shutter ${ORANGE} ~ GUI Static Screen Capture ${RESET}"
 apt -y -qq install shutter \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
-##### Install htop  - an interactive process viewer for Unix
+#### Install htop  - an interactive process viewer for Unix
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing Htop ${ORANGE} ~ CLI Process Viewer ${RESET}"
 apt -y -qq install htop \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
 
-##### Install psmisc ~ allows for 'killall command' to be used
+#### Install psmisc ~ allows for 'killall command' to be used
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing psmisc ${ORANGE} ~ Suite to Help With Running Processes ${RESET}"
 apt -y -qq install psmisc \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
 
-###### Setup pipe viewer
+#### Setup pipe viewer
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing Pipe viewer ${ORANGE} ~ CLI progress bar ${RESET}"
 apt -y -qq install pv \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
 
-##### Install filezilla
+#### Install filezilla
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing FileZilla ${ORANGE} ~ GUI file transfer ${RESET}"
 apt -y -qq install filezilla \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -517,7 +515,7 @@ ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -P "" >/dev/null
 #--- Change MOTD
 apt -y -qq install cowsay \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-echo "Moo" | /usr/games/cowsay > /etc/motd
+echo "I see you" | /usr/games/cowsay -f eyes > /etc/motd
 #--- Change SSH settings
 file=/etc/ssh/sshd_config; [ -e "${file}" ] && cp -n $file{,.bkup}
 sed -i 's/^PermitRootLogin .*/PermitRootLogin yes/g' "${file}"      # Accept password login (overwrite Debian 8+'s more secure default option...)
@@ -534,7 +532,7 @@ grep -q '^## ssh' "${file}" 2>/dev/null \
 source "${file}" || source ~/.zshrc
 
 
-##### Install mysql
+#### Install mysql
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing MySQL ${ORANGE} ~ Database ${RESET} "
 apt -y -qq install mysql-server \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -549,7 +547,7 @@ password=
 EOF
 
 
-##### Install apache2 & php
+#### Install apache2 & php
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Apache2${RESET} & ${GREEN} PHP ${ORANGE} ~ Web Server ${RESET} "
 apt -y -qq install apache2 php php-cli php-curl \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -566,7 +564,12 @@ grep -q '^## www' "${file}" 2>/dev/null \
 #--- Apply new alias
 source "${file}" || source ~/.zshrc
 
-##### Setup tftp client & server
+#--- Copying Windows-binaries to Apache folder
+cp -r /usr/share/windows-binaries /var/www/html
+
+
+
+#### Setup tftp client & server
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Setting up tftp client${RESET} & ${GREEN}Server${ORANGE} ~ File Transfer Methods ${RESET} "
 apt -y -qq install tftp atftpd \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -589,8 +592,12 @@ systemctl disable atftpd
 #echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 #echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
 
+#--- Copying Windows-binaries to tftp folder
+cp -r /usr/share/windows-binaries /var/tftp/
 
-##### Install Pure-FTPd
+
+
+#### Install Pure-FTPd
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Pure-FTPd${ORANGE} ~ FTP server/file transfer method ${RESET} "
 apt -y -qq install pure-ftpd \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -622,7 +629,7 @@ ln -sf /etc/pure-ftpd/conf/PureDB /etc/pure-ftpd/auth/50pure
 #--- 'Better' MOTD
 apt -y -qq install cowsay \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-echo "moo" | /usr/games/cowsay > /etc/pure-ftpd/welcome.msg
+echo "Viva Mexico!" | /usr/games/cowsay -f turkey > /etc/pure-ftpd/welcome.msg
 echo -e " ${YELLOW}[i]${GREEN} Pure-FTPd username: ${ORANGE} anonymous ${RESET} "
 echo -e " ${YELLOW}[i]${GREEN} Pure-FTPd password: ${ORANGE} anonymous ${RESET} "
 #--- Apply settings
@@ -636,5 +643,13 @@ grep -q '^## ftp' "${file}" 2>/dev/null \
 source "${file}" || source ~/.zshrc
 #--- Remove from start up
 systemctl disable pure-ftpd
+
+#--- Copying Windows-binaries to ftp folder
+cp -r /usr/share/windows-binaries /var/ftp/
+
+
+TEXT='  FTP, Aapache & TFTP have been enabled'
+notice--
+
 
 }
