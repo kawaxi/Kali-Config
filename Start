@@ -28,83 +28,27 @@ f=false
 FULL=0
 UPDATE=0
 
-
-
-# ---------- Regular Colors ---------- #
-
-#--- Issues/Errors
-RED="\033[01;31m"
-#--- Success
-GREEN="\033[01;32m"
-#--- Warnings/Information
-YELLOW="\033[01;33m"
-#--- Heading
-BLUE="\033[00;94m"
-#--- Highlight
-BOLD="\033[01;01m"
-#--- Normal
-RESET="\033[00m"
-ORANGE="\033[0;33m"
-WHITE="\033[1;37m"
-CYAN='\033[0;36m'
-MAGENTA='\033[00;35m'
-
-# ---------- Intense Colors ---------- #
-
-#--- Black
-IBLACK='\033[0;90m'
-#--- Red
-IRED='\033[0;91m'
-#--- Green
-IGREEN='\033[0;92m'
-#--- Yellow
-IYELLOW='\033[0;93m'
-#--- Blue
-IBLUE='\033[0;94m'
-#--- Purple
-IPurple='\033[0;95m'
-#--- Cyan
-ICYAN='\033[0;96m'
-#--- White
-IWHITE='\033[0;97m'
-On_Yellow='\033[43m'
-On_Cyan='\033[46m'
-On_White='\033[47m'
-On_Blue='\033[44m'
-
-# ---------- Underlined Colors ---------- #
-
-#--- Black
-UBlack='\033[4;30m'
-#--- Red
-URed='\033[4;31m'
-#--- Green
-UGreen='\033[4;32m'
-#--- Yellow
-UYellow='\033[4;33m'
-#--- Blue
-UBlue='\033[4;34m'
-#--- Purple
-UPurple='\033[4;35m'
-#--- Cyan
-UCyan='\033[4;36m'
-#--- White
-UWhite='\033[4;37m'
-
-
 # ---------- Declaring ---------- #
 
+#--- Colors, Functions, banners, Headings
 source lib/visual
+#--- Help Functions
 source lib/help
+#--- Update & Upgrade
 source lib/update
+#--- Configuring the Environment
 source lib/config
+#--- Express Install , only basic apps for daily use.
 source lib/express
+#--- Full Module, get ready for pentest.
 source lib/full
+#--- Cleaning the system after all the work is done.
+source lib/clean
 
 
 #--- Using our full width
 M=${COLUMNS:-$(tput cols)}
-#--- Where are we up to?
+#--- Where do we start?
 STAGE=0
 
 # ---------- Total stages for total ---------- #
@@ -118,8 +62,6 @@ U=2
 X=17
 #--- Number of STAGES In FUll File
 F=58
-
-#### This is where funcionts , Banners and Header were ####
 
 
 # ---------- Arguments ---------- #
@@ -314,17 +256,57 @@ sleep 2s
 EOF
   chmod +x "${file}"
   ln -sf "${file}" /root/Desktop/mount-shared-folders.sh
+
+# Fixing Time Sync Problem by updating rc.d 
+# https://www.digitalocean.com/community/tutorials/how-to-configure-a-linux-service-to-start-automatically-after-a-crash-or-reboot-part-1-practical-examples#step-1-%E2%80%94-connecting-to-your-debian-6-droplet
+systemctl enable open-vm-tools.service
+#update-rc.d open-vm-tools enable
+systemctl restart open-vm-tools.service
+# If this doest fix the problem , add Restart=on-failure under Service ; /etc/systemd/system/multi-user.target.wants/open-vm-tools.service
+#file=/etc/systemd/system/multi-user.target.wants/open-vm-tools.service
+
+# file=/etc/systemd/system/multi-user.target.wants/open-vm-tools.service; [ -e "${file}" ] && cp -n $file{,.bkup}
+# if [[ -f "${file}" ]]; then
+#   echo -e ' '${GREEN}'[!]'${RESET}" ${file} ${ORANGE} Modifying File "  ${RESET} 1>&2
+#   cat <<EOF > "${file}" \
+#   || echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
+# [Unit]
+
+# Description=Service for virtual machines hosted on VMware
+# Documentation=http://open-vm-tools.sourceforge.net/about.php
+# ConditionVirtualization=vmware
+
+# [Service]
+# ExecStart=/usr/bin/vmtoolsd
+# TimeoutStopSec=5
+# Restart=on-failure
+
+# [Install]
+# WantedBy=multi-user.target
+
+# EOF
+# chmod 777 $file
+
+# else
+# echo -e ' '${RED}'[!] Are you sure this file exists? '${RESET} 1>&2
+# fi
+
+# Reloading daemons and service to reflect changes
+# systemctl daemon-reload
+# systemctl restart open-vm-tools.service
+
+
+#--- Installing VirtualBox Guest Additions.   Note: Need VirtualBox 4.2.xx+ for the host (http://docs.kali.org/general-use/kali-linux-virtual-box-guest)
 elif (dmidecode | grep -iq virtualbox); then
-  #--- Installing VirtualBox Guest Additions.   Note: Need VirtualBox 4.2.xx+ for the host (http://docs.kali.org/general-use/kali-linux-virtual-box-guest)
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing VirtualBox's guest additions${RESET}"
-  apt -y -qq install virtualbox-guest-x11 \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing VirtualBox's guest additions${RESET}"
+apt -y -qq install virtualbox-guest-x11 \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 fi
 
 
 # ---------- Configure your system ---------- #
   TEXT=' We are configuring your System , go get a drink.'
-  heading --
+  heading--
   configure--
 
   TEXT="!! System's Configuration done!!"
@@ -353,19 +335,9 @@ fi
 
 
 # ---------- Clean the system---------- #
-(( STAGE++ )); echo -e "\n\n ${YELLOW}[*]${RESET} (${STAGE}/${TOTAL}) ${ORANGE}Cleaning the system ${RESET}"
-#--- Clean package manager
-for FILE in clean autoremove; do apt -y -qq "${FILE}"; done
-apt -y -qq purge $(dpkg -l | tail -n +6 | egrep -v '^(h|i)i' | awk '{print $2}')   # Purged packages
-#--- Update slocate database
-updatedb
-#--- Reset folder location
-cd ~/ &>/dev/null
-#--- Remove any history files (as they could contain sensitive info)
-history -c 2>/dev/null
-for i in $(cut -d: -f6 /etc/passwd | sort -u); do
-  [ -e "${i}" ] && find "${i}" -type f -name '.*_history' -delete
-done
+TEXT='Cleaning initiated, please wait'
+notice--
+clean--
 
 
 # ---------- Time taken ---------- #
@@ -385,7 +357,7 @@ echo -e " ${YELLOW}[i]${RESET} + ${YELLOW}Reboot${RESET}"
 (dmidecode | grep -iq virtual) \
   && echo -e " ${YELLOW}[i]${RESET} + Take a snapshot (Virtual machine detected)"
 
-echo -e '\n'${BLUE}'[*]'${RESET}' '${BOLD}'Done!'${RESET}'\n\a'
+echo -e '\n'${BLUE}'[*]'${RESET}' '${BOLD}'Done! Happy Hacking'${RESET}'\n\a'
 
 
 
