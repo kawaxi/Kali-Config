@@ -45,12 +45,27 @@ Pending Ideas:
 * Working with counters inside modules
 * Fix IRC Bouncer Configuration ( it fails to replace one line)
 * Need to Include personalized exploits to exploit DB.
-* Need to fix time no longer syncing  after resuming VM, you need to do it manually.
 * Add Off the record messaging plug in -otr
 * Set key macros for programming.  
 * Make script to trap TERM signal.
 
 # Change Log
+
+March 4th 
+* Fxed time sync problem by adding another safety layer by changging daemon behavior.
+* Added Sublime text as an option for the 32 bits version
+* Enabled favorites for gnome dash to dock for 32 bits OS.
+* Condition added to check for MingW Libs in order to save time when Installing.
+* Condition added to check for Wine in order to save time.
+* Condition added to skip installed for Veil-Evasion.
+
+Feb 25th 
+* Fixed time sync problem
+* Wordked on comment standard 
+* Add msf alias for Msfconsole
+* Cleaning Module Created.
+* Moved Colors definition to Visual Module.
+* Added Tilda to express Installation Module.
 
 Feb 22nd 
 * Copied Windows-binaries to FTP, TFTP, and Apache services folder.
@@ -68,6 +83,3 @@ Feb 19th 2017
 Feb 1st 2017
 * Fixed Commenting format in Start File.
 * Fixed Several minor issues.
-
-
-
