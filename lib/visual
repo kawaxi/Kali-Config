@@ -1,8 +1,72 @@
+#!/bin/bash
 
-#### Funcionts , Banners, Header, ####
+#### Colors, Functions , Banners, Headers, ####
+
+# ---------- Regular Colors ---------- #
+
+#--- Issues/Errors
+RED="\033[01;31m"
+#--- Success
+GREEN="\033[01;32m"
+#--- Warnings/Information
+YELLOW="\033[01;33m"
+#--- Heading
+BLUE="\033[00;94m"
+#--- Highlight
+BOLD="\033[01;01m"
+#--- Normal
+RESET="\033[00m"
+ORANGE="\033[0;33m"
+WHITE="\033[1;37m"
+CYAN='\033[0;36m'
+MAGENTA='\033[00;35m'
+
+# ---------- Intense Colors ---------- #
+
+#--- Black
+IBLACK='\033[0;90m'
+#--- Red
+IRED='\033[0;91m'
+#--- Green
+IGREEN='\033[0;92m'
+#--- Yellow
+IYELLOW='\033[0;93m'
+#--- Blue
+IBLUE='\033[0;94m'
+#--- Purple
+IPurple='\033[0;95m'
+#--- Cyan
+ICYAN='\033[0;96m'
+#--- White
+IWHITE='\033[0;97m'
+On_Yellow='\033[43m'
+On_Cyan='\033[46m'
+On_White='\033[47m'
+On_Blue='\033[44m'
+
+# ---------- Underlined Colors ---------- #
+
+#--- Black
+UBlack='\033[4;30m'
+#--- Red
+URed='\033[4;31m'
+#--- Green
+UGreen='\033[4;32m'
+#--- Yellow
+UYellow='\033[4;33m'
+#--- Blue
+UBlue='\033[4;34m'
+#--- Purple
+UPurple='\033[4;35m'
+#--- Cyan
+UCyan='\033[4;36m'
+#--- White
+UWhite='\033[4;37m'
+
+
 
 centrar--(){
-# Center text
+#--- Center text
 span=$(((M + ${#TEXT}) / 2 ))
 A=$((span - ${#TEXT} ))
 }
@@ -102,13 +166,13 @@ notice--(){
 
 
   printf "$BLUE\n"
-  #  big chain of ####
+  #---  big chain of ####
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
-  # Middle ##  ; use 5 for full width for ##, or 7 for ###
+  #--- Middle ##  ; use 5 for full width for ##, or 7 for ###
   printf "\n##" && printf "%$((M - 5))s ##"
-  # MAIN TEST, remember to subtract the size of "TEST"
+  #--- MAIN TEST, remember to subtract the size of "TEST"
   printf "\n$BLUE## $RED $TEXT" && printf "$BLUE%$((M - ${#TEXT} - 7))s ##"
-  ##
+
   printf "\n##" && printf "% $((M - 5))s ##"
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
   printf "\n\n"
@@ -119,24 +183,25 @@ notice--(){
 heading--(){
 
   TEXT="Kawaxi's Kali Linux Rolling 2016.2 Setup Script! V. 1.0 "
-  # Center text
+  #--- Center text
   span=$(((M + ${#TEXT}) / 2 ))
-  # Making sure to center if heading exists
+  #--- Making sure to center if heading exists
   A=$((span - ${#TEXT} - 3 ))
 
   printf "$GREEN\n"
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
   printf "\n###" && printf "%$((M - 7))s ###"
 
-  #CENTER your text
+  #---CENTER your text
   printf "\n$GREEN###" && printf "%${A}s $TEXT" && printf "$GREEN%$((span -${#TEXT} - 5 ))s ###"
 
 
   TEXT='Make sure to run it as RooT!!   '
-  # Center text
+  #--- Center text
   span=$(((M + ${#TEXT}) / 2 ))
   A=$((span - ${#TEXT} - 3 ))
-  printf "\n$GREEN###" && printf "%${A}s $TEXT" && printf "$GREEN%$((span -${#TEXT} - 5 ))s ###"   #   CENTER your text
+  #---   CENTER your text
+  printf "\n$GREEN###" && printf "%${A}s $TEXT" && printf "$GREEN%$((span -${#TEXT} - 5 ))s ###"
   printf "\n###" && printf "%$((M - 7))s ###"
   printf '\n%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' '#'
   printf "\n\n"
