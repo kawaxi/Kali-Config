@@ -49,12 +49,9 @@ fi
 #### Installing Hexchat
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing (GNOME) Hexchat ${ORANGE} ~ IRC Client ${RESET}"
 apt-get install hexchat -y
-
 echo -e "\n ${ORANGE}[*]${ORANGE} Let's Configure Hexchat ${RESET}"
-
 apt-get -y -qq install xdotool  \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-
 #--- making sure to open the app to so the app can creat the folder with the files
 hexchat & HEXPID=$! >/dev/null 2>&1
 
@@ -450,6 +447,7 @@ apt -y -qq install htop \
 
 
 #### Install psmisc ~ allows for 'killall command' to be used
+
 if ! foobar_loc="$(type -p "killall")" || [ -z "$foobar_loc" ]; then
   (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing psmisc ${ORANGE} ~ Suite to Help With Running Processes ${RESET}"
   apt -y -qq install psmisc \
@@ -458,12 +456,10 @@ else
   echo -e "\n\n ${ORANGE}[*]${RESET} ${GREEN} psmisc is already installed.... ${YELLOW} Skipping  ${RESET}"
 fi
 
-
 #### Setup pipe viewer
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing Pipe viewer ${ORANGE} ~ CLI progress bar ${RESET}"
 apt -y -qq install pv \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-
 
 #### Install filezilla
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing FileZilla ${ORANGE} ~ GUI file transfer ${RESET}"
@@ -490,6 +486,7 @@ sed -i 's#^.*"Always use default editor".*#\t<Setting name="Always use default e
 
 
 #### Setup SSH
+
 if ! foobar_loc="$(type -p "ssh")" || [ -z "$foobar_loc" ]; then
   (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Setting up ${GREEN}SSH ${ORANGE} ~ CLI access ${RESET} "
   #apt -y -qq install openssh-server \
@@ -540,11 +537,13 @@ else
   user=root
   host=localhost
   password=
+
 EOF
 fi
 
 
 #### Install apache2 & php
+
 if ! foobar_loc="$(type -p "apache2")" || [ -z "$foobar_loc" ]; then
   (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Apache2${RESET} & ${GREEN} PHP ${ORANGE} ~ Web Server ${RESET} "
   apt -y -qq install apache2 php php-cli php-curl \
@@ -562,12 +561,10 @@ else
     || echo -e '## www\nalias wwwroot="cd /var/www/html/"\n' >> "${file}"
   #--- Apply new alias
   source "${file}" || source ~/.zshrc
-
 fi
 
 #--- Copying Windows-binaries to Apache folder
 cp -r /usr/share/windows-binaries /var/www/html
-
 
 
 #### Setup tftp client & server
@@ -595,7 +592,6 @@ systemctl disable atftpd
 
 #--- Copying Windows-binaries to tftp folder
 cp -r /usr/share/windows-binaries /var/tftp/
-
 
 #### Install Pure-FTPd
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Pure-FTPd${ORANGE} ~ FTP server/file transfer method ${RESET} "

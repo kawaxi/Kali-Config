@@ -11,6 +11,7 @@ if [[ $(which gnome-shell) ]]; then
   (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuring GNOME 3 ${ORANGE} ~ Desktop environment ${RESET}"
   export DISPLAY=:0.0
 
+
   #--- Installing Caffeine Extension ---#
   git clone git://github.com/eonpatapon/gnome-shell-extension-caffeine.git && cd gnome-shell-extension-caffeine
   ./update-locale.sh
@@ -22,6 +23,7 @@ if [[ $(which gnome-shell) ]]; then
   rm -r /root/gnome-shell-extension-caffeine
   gnome-shell-extension-tool -e caffeine@patapon.info
   gsettings set org.gnome.shell.extensions.caffeine user-enabled true
+
 
   #--- Windows List Extension
   gnome-shell-extension-tool -e window-list@gnome-shell-extensions.gcampax.github.com
@@ -65,7 +67,6 @@ if [[ $(which gnome-shell) ]]; then
   # dconf write /org/gnome/shell/extensions/dash-to-dock/require-pressure-to-show false
   # dconf write /org/gnome/shell/extensions/dash-to-dock/hide-delay 0.200
 
-
   # Let's Control it using Caffeine for now
   #--- Disable screensaver
   # echo -e "\n\n ${GREEN}[i] ${GREEN}Lets Start Tweaking GNOME ...${RESET}"
@@ -95,6 +96,7 @@ if [[ $(which gnome-shell) ]]; then
 else
   echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping Gnome it's not installed ${RESET}..."
 fi
+
 
 
 ##### Configure bash - All users
@@ -343,6 +345,7 @@ gsettings set org.gnome.nautilus.desktop trash-icon-visible true
 
 echo -e "${ORANGE} [*]${YELLOW} Setting up Bookmarks ${RESET}"
 
+
   #  read -p "!!!Enter the path of each directory you would like bookmarked - EX:/usr/share and a name for the bookmark (Hit Enter to Continue)";
   #  echo "[*] 3 Entries max, more can be manually entered. (FTP, TFTP, HTML, and Root Dir / done by default."
    if [ ! -d "/root/.config/gtk-3.0" ]; then
@@ -355,8 +358,8 @@ echo -e "${ORANGE} [*]${YELLOW} Setting up Bookmarks ${RESET}"
    echo file:///var/ftp/ ftp >> ~/.config/gtk-3.0/bookmarks
    echo file:///var/tftp tftp >> ~/.config/gtk-3.0/bookmarks
    echo file:///tmp  /tmp >> ~/.config/gtk-3.0/bookmarks
-   echo file:///root/Dropbox  /Dropbox >> ~/.config/gtk-3.0/bookmarks
 
+   echo file:///root/Dropbox  /Dropbox >> ~/.config/gtk-3.0/bookmarks
 
   #  read -p "[*] Enter the FTP user you created to create the FTP bookmark: " ftpuser;
   #  echo file:///var/ftp/"$ftpuser" ftp >> ~/.config/gtk-3.0/bookmarks
@@ -370,6 +373,17 @@ echo -e "${ORANGE} [*]${YELLOW} Setting up Bookmarks ${RESET}"
   #       fi
   #  done
 
+  #  read -p "[*] Enter the FTP user you created to create the FTP bookmark: " ftpuser;
+  #  echo file:///var/ftp/"$ftpuser" ftp >> ~/.config/gtk-3.0/bookmarks
+  #  for a in $(seq 1 3); do
+  #       read -p "[*] Enter additional entries now EX:/usr/bin.  enter 'exit' when done: " loc;
+  #       if [ "$loc" == "exit" ]; then
+  #            break
+  #       else
+  #            read -p "[*] Enter a name for this bookmark entry EX: bin: " name;
+  #            echo file://"$loc" "$name" >> ~/.config/gtk-3.0/bookmarks
+  #       fi
+  #  done
 
 
 # Bash completion is in every kali....

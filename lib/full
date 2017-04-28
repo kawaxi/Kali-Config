@@ -271,6 +271,7 @@ chmod +x "${file}"
 
 
 #### Install Daemonfs - GUI file monitor
+
 if ! foobar_loc="$(type -p "daemonfs")" || [ -z "$foobar_loc" ]; then
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing daemonfs ${ORANGE} ~ GUI File Monitor ${RESET}"
 apt -y -qq install daemonfs \
@@ -286,7 +287,6 @@ for FILE in network-manager-openvpn network-manager-pptp network-manager-vpnc ne
   apt -y -qq install "${FILE}" \
     || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 done
-
 
 #### Install Vulscan script for nmap
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing ${GREEN}Vulscan Script for Nmap ${ORANGE} ~ Vulnerability Scanner Add-On ${RESET}"
@@ -349,7 +349,6 @@ rm -f /usr/share/windows-binaries/{AccessChk.zip,Eula.txt}
 
 
 #### Downloading PsExec.exeif ! foobar_loc="$(type -p "wine")" || [ -z "$foobar_loc" ]; then
-
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Downloading PsExec.exe ${ORANGE} ~ Pass The Hash 'phun' ${RESET}"
 apt -y -qq install windows-binaries \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -419,18 +418,19 @@ done
 
 #### Install WINE
 #--- Already Installed?
+
 if ! foobar_loc="$(type -p "winetricks")" || [ -z "$foobar_loc" ]; then
   (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing WINE${ORANGE} ~ Run Windows Programs on *nix${RESET}"
   apt -y -qq install wine winetricks \
     || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
   #--- Using x64?
-  if [[ "$(uname -m)" == 'x86_64' ]]; then
-    (( STAGE++ )); echo -e " ${ORANGE}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Configuring ${ORANGE}WINE ${RESET}(x64) "
-    dpkg --add-architecture i386
-    apt -qq update
-    apt -y -qq install wine32 \
-      || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-  fi
+    if [[ "$(uname -m)" == 'x86_64' ]]; then
+      (( STAGE++ )); echo -e " ${ORANGE}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Configuring ${ORANGE}WINE ${RESET}(x64) "
+      dpkg --add-architecture i386
+      apt -qq update
+      apt -y -qq install wine32 \
+        || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+    fi
   #--- Run WINE for the first time
   [ -e /usr/share/windows-binaries/whoami.exe ] && wine /usr/share/windows-binaries/whoami.exe &>/dev/null
   #--- Setup default file association for .exe
@@ -456,7 +456,6 @@ popd >/dev/null
 #--- Add to windows path
 grep -q '^"PATH"=.*C:\\\\MinGW\\\\bin' ~/.wine/system.reg \
   || sed -i '/^"PATH"=/ s_"$_;C:\\\\MinGW\\\\bin"_' ~/.wine/system.reg
-
 
 #### Install hyperion
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing hyperion ${ORANGE} ~ Bypassing Anti-Virus ${RESET}"
@@ -502,10 +501,10 @@ chmod +x "${file}"
 
 
 #### Install Backdoor Factory Proxy (BDFProxy)
+
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Backdoor Factory Proxy (BDFProxy) ${ORANGE} ~ Patches Binaries Files During a MITM ${RESET}"
 apt -y -qq install bdfproxy \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-
 
 #### Install BetterCap
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing BetterCap ${ORANGE} ~ MITM Framework ${RESET} "
@@ -519,12 +518,10 @@ gem build bettercap.gemspec
 gem install bettercap*.gem
 popd >/dev/null
 
-
 #### Install mitmf
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing MITMf ${ORANGE} ~ Framework for MITM Attacks ${RESET}"
 apt -y -qq install mitmf \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-
 
 #### Install seclist
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Seclist ${ORANGE} ~ Multiple Types of Word lists and similar ${RESET}"
@@ -535,7 +532,6 @@ apt -y -qq install wordlists \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 [ -e /usr/share/seclists ] \
   && ln -sf /usr/share/seclists /usr/share/wordlists/seclists
-
 
 #### Update wordlists
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Updating Wordlists ${ORANGE} ~ Collection of Wordlists ${RESET}"
@@ -656,7 +652,6 @@ chmod +x "${file}"
 
 
 #### Install Crowbar -- brute force"
-
 if ! foobar_loc="$(type -p "crowbar-git")" || [ -z "$foobar_loc" ]; then
   rm -r /opt/crowbar-git # in Case its already installed
 else
@@ -713,7 +708,6 @@ apt -y -qq install golang \
 apt -y -qq install gitg \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
-
 #### Install Gnmap-Parser (fork)
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Gnmap-Parser (fork) ${ORANGE} ~ Parse Nmap Exports into various plain-text formats ${RESET}"
 git clone -q -b master https://github.com/nullmode/gnmap-parser.git /opt/gnmap-parser-git/ \
@@ -754,7 +748,6 @@ else
   echo -e "\n\n ${ORANGE}[i]${RESET} ${GREEN} Cluster is already installed.... ${YELLOW} Skipping  ${RESET}"
 fi
 
-
 #### Install webhandler
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Webhandler ${ORANGE} ~ Shell TTY Handler ${RESET}"
 apt -y -qq install webhandler \
@@ -773,10 +766,10 @@ git pull -q
 popd >/dev/null
 
 #### Install gobuster
+
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Gobuster ${ORANGE} ~ Directory/File/DNS Busting tool ${RESET}"
 apt -y -qq install gobuster \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-
 
 #### Install reGeorg
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing ReGeorg ${ORANGE} ~ Pivot Via Web Shells ${RESET}"

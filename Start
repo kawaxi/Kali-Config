@@ -267,12 +267,19 @@ EOF
   chmod +x "${file}"
   ln -sf "${file}" /root/Desktop/mount-shared-folders.sh
 
+
 # Fixing Time Sync Problem by updating rc.d
 # https://www.digitalocean.com/community/tutorials/how-to-configure-a-linux-service-to-start-automatically-after-a-crash-or-reboot-part-1-practical-examples#step-1-%E2%80%94-connecting-to-your-debian-6-droplet
 
 #systemctl enable open-vm-tools.service <---- enable this if you have problems with vmtools
 #update-rc.d open-vm-tools enable
 #systemctl restart open-vm-tools.service <---- enable this if you have problems with vmtools
+
+# Fixing Time Sync Problem by updating rc.d 
+# https://www.digitalocean.com/community/tutorials/how-to-configure-a-linux-service-to-start-automatically-after-a-crash-or-reboot-part-1-practical-examples#step-1-%E2%80%94-connecting-to-your-debian-6-droplet
+systemctl enable open-vm-tools.service
+#update-rc.d open-vm-tools enable
+systemctl restart open-vm-tools.service
 
 # If this doest fix the problem , add Restart=on-failure under Service ; /etc/systemd/system/multi-user.target.wants/open-vm-tools.service
 #file=/etc/systemd/system/multi-user.target.wants/open-vm-tools.service
@@ -350,7 +357,6 @@ fi
 TEXT='Cleaning initiated, please wait'
 notice--
 clean--
-
 
 # ---------- Time taken ---------- #
 finish_time=$(date +%s)
