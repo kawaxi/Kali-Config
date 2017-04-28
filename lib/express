@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash
 
 
 express--(){
@@ -49,18 +49,28 @@ fi
 #### Installing Hexchat
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing (GNOME) Hexchat ${ORANGE} ~ IRC Client ${RESET}"
 apt-get install hexchat -y
-echo -e "\n ${ORANGE}[*]${ORANGE} Let's Configure Hexchat ${RESET}"
+#--- Add Hexchat to panel (GNOME)
+# export DISPLAY=:0.0${RESET}
+
+####CONFIGURING HEXCHAT
+# export DISPLAY=:0.0
+
+echo -e "\n ${GREEN} [*] ${ORANGE}Let's Configure Hexchat ${RESET}"
+
 apt-get -y -qq install xdotool  \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+
+
 #--- making sure to open the app to so the app can creat the folder with the files
 hexchat & HEXPID=$! >/dev/null 2>&1
 
 #--- Initiating Hexchat and saving the pid.
-echo -e "${ORANGE} [i]${ORANGE} Our PID for Hexchat is: ${RESET}$HEXPID "
+echo -e "${ORANGE}[*]Our PID for Hexchat is $HEXPID ${RESET}"
+
 
 #---founding our windows ID for our PID
 HEXWINID=$(xdotool search --onlyvisible --sync --pid ${HEXPID} | tail -1)
-echo -e "${ORANGE} [i]${ORANGE} We found our window ID for Hexchat PID : ${RESET}$HEXWINID ${RESET}\n"
+echo -e "${ORANGE}[*]We found our window ID for Hexchat PID : $HEXWINID ${RESET}\n"
 
 xdotool key --window $HEXWINID Return
 
@@ -73,7 +83,7 @@ timeout 5 killall -9 -q -w hexchat
 #--- HEXCHAT GENERAL CONFIGURATION; YOU COULD ALSO LET HEXCHAT TO GENERATE IT.
 file=~/.config/hexchat/hexchat.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
-  echo -e ' '${ORANGE}'[i]'${WHITE}" ${file} ${YELLOW} Detected. Replacing ..." ${RESET} 1>&2
+  echo -e ' '${GREEN}'[*]'${WHITE}" ${file} ${ORANGE} Detected. Replacing ..." ${RESET} 1>&2
   timeout 300 curl --progress -k -L -f "https://raw.githubusercontent.com/kawaxi/Kali-Setup/master/hexchat.conf" > "${file}" \
   || echo -e ' '${RED}'[!] Issue Downloading file'${RESET} 1>&2
 else
@@ -84,7 +94,7 @@ fi
 #--- HEXCHAT Friends Lst     ### PLACE YOUR FRINDS LIST IN THIS SECTION
 file=~/.config/hexchat/notify.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
-  echo -e ' '${ORANGE}'[i]'${WHITE}" ${file} ${YELLOW} Detected. Skipping..." ${RESET} 1>&2
+  echo -e ' '${GREEN}'[!]'${WHITE}" ${file} ${ORANGE} detected. Skipping..." ${RESET} 1>&2
 else
   cat <<EOF > "${file}" \
 	|| echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
@@ -105,7 +115,7 @@ file=~/.config/hexchat/servlist.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
   ([[ -e "${file}" && "$(tail -c 1 ${file})" != "" ]]) && echo >> "${file}"
   grep -q '^N=Bouncer Elite=' "${file}" 2>/dev/null \
-  echo -e ' '${ORANGE}'[i]'${WHITE}" ServList.conf Detected. ${ORANGE} Replacing Lines..." ${RESET} 1>&2
+  echo -e ' '${GREEN}'[!]'${WHITE}" ServList.conf Detected. ${ORANGE} Replacing Lines..." ${RESET} 1>&2
   file=/tmp/servlist.py
   cat <<EOF > "${file}" \
 	|| echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
@@ -148,7 +158,7 @@ rm $file
 #--- Create your colors files
 file=~/.config/hexchat/colors.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
 if [[ -f "${file}" ]]; then
-  echo -e ' '${ORANGE}'[i]'${RESET}" ${file} ${ORANGE} Detected. Skipping..."  ${RESET} 1>&2
+  echo -e ' '${GREEN}'[!]'${RESET}" ${file} ${ORANGE} Detected. Skipping..."  ${RESET} 1>&2
 else
   cat <<EOF > "${file}" \
 	|| echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
@@ -205,7 +215,7 @@ fi
 file=~/.config/hexchat/pevents.conf
 if [[ -f "${file}" ]]; then
   file=/tmp/pevents.py
-  echo -e ' '${ORANGE}'[!]'${WHITE}" ${file} ${ORANGE}  Detected. Replacing Lines..." ${RESET} 1>&2
+  echo -e ' '${GREEN}'[!]'${WHITE}" ${file} ${ORANGE}  Detected. Replacing Lines..." ${RESET} 1>&2
   cat <<EOF > "${file}" \
 	|| echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
 
@@ -231,7 +241,7 @@ rm $file
 else
   #--- We download the files or we create them, creating them will add more than 400  lines.
   file=~/.config/hexchat/pevents.conf
-  echo -e "${ORANGE} [i] ${WHITE}Downloading pevents.conf ${YELLOW}          File  Downloaded ${RESET}"
+  echo -e "${GREEN} [*] ${WHITE}Downloading pevents.conf ${ORANGE} File  Downloaded ${RESET}"
   timeout 300 curl --progress -k -L -f "https://raw.githubusercontent.com/kawaxi/Kali-Setup/master/pevents.conf" > "${file}" \
   || echo -e ' '${RED}'[!] Issue Downloading file'${RESET} 1>&2
 fi
@@ -239,6 +249,8 @@ fi
 
 TEXT='  Configuration Files For Hexchat Have Been Created'
 notice--
+
+
 
 ##### Install Terminator (GNOME)
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})  ${GREEN} Installing (GNOME)Terminator ${ORANGE} ~ Multiple terminals in a single window ${RESET}"
@@ -258,7 +270,7 @@ cat <<EOF > "${file}" \
 [profiles]
   [[default]]
     audible_bell = True
-    background_darkness = 0.77
+    background_darkness = 0.9
     scroll_on_output = False
     copy_on_selection = True
     font = Monospace 10
@@ -418,6 +430,12 @@ if [ -e "${file}" ]; then
     || sed -i 's#<property name="\&lt;Alt\&gt;F2" type="string" value="xfrun4"/>#<property name="\&lt;Alt\&gt;F2" type="string" value="xfrun4"/>\n      <property name="\&lt;Primary\&gt;r" type="string" value="/usr/local/bin/start-conky"/>#' "${file}"
 fi
 
+#### Installing Tilda
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Tilda ${ORANGE} ~ Pop Up Terminal Emulator ${RESET}"
+apt-get -y -q install tilda
+#Adding Tilda to startup
+cp /usr/share/applications/tilda.desktop ~/.config/autostart/
+
 #### Installing  Icedove (Thunderbird)
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Icedove ${ORANGE} ~ Email Client ${RESET} "
 #apt -y -qq install thunderbird
@@ -432,8 +450,7 @@ apt -y -qq install libreoffice \
 
 #### Install asciinema  -- Terminal Recorder
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing asciinema ${ORANGE} ~ CLI Terminal Recorder${RESET}"
-apt -y -qq install asciinema  \
-  || echo -e ' '${RED}'[!] Issue with apt install'  1>&2
+curl -s -L https://asciinema.org/install | sh
 
 #### Install Shutter   -- Take snapshots.
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing Shutter ${ORANGE} ~ GUI Static Screen Capture ${RESET}"
@@ -447,19 +464,16 @@ apt -y -qq install htop \
 
 
 #### Install psmisc ~ allows for 'killall command' to be used
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing psmisc ${ORANGE} ~ Suite to Help With Running Processes ${RESET}"
+apt -y -qq install psmisc \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
-if ! foobar_loc="$(type -p "killall")" || [ -z "$foobar_loc" ]; then
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing psmisc ${ORANGE} ~ Suite to Help With Running Processes ${RESET}"
-  apt -y -qq install psmisc \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-else
-  echo -e "\n\n ${ORANGE}[*]${RESET} ${GREEN} psmisc is already installed.... ${YELLOW} Skipping  ${RESET}"
-fi
 
 #### Setup pipe viewer
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing Pipe viewer ${ORANGE} ~ CLI progress bar ${RESET}"
 apt -y -qq install pv \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+
 
 #### Install filezilla
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing FileZilla ${ORANGE} ~ GUI file transfer ${RESET}"
@@ -486,85 +500,73 @@ sed -i 's#^.*"Always use default editor".*#\t<Setting name="Always use default e
 
 
 #### Setup SSH
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Setting up ${GREEN}SSH ${ORANGE} ~ CLI access ${RESET} "
+apt -y -qq install openssh-server \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+#--- Wipe current keys
+rm -f /etc/ssh/ssh_host_*
+find ~/.ssh/ -type f ! -name authorized_keys -delete 2>/dev/null
+#--- Generate new keys
+ssh-keygen -b 4096 -t rsa1 -f /etc/ssh/ssh_host_key -P "" >/dev/null
+ssh-keygen -b 4096 -t rsa -f /etc/ssh/ssh_host_rsa_key -P "" >/dev/null
+ssh-keygen -b 1024 -t dsa -f /etc/ssh/ssh_host_dsa_key -P "" >/dev/null
+ssh-keygen -b 521 -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -P "" >/dev/null
+ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -P "" >/dev/null
+#--- Change MOTD
+apt -y -qq install cowsay \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+echo "I see you" | /usr/games/cowsay -f eyes > /etc/motd
+#--- Change SSH settings
+file=/etc/ssh/sshd_config; [ -e "${file}" ] && cp -n $file{,.bkup}
+sed -i 's/^PermitRootLogin .*/PermitRootLogin yes/g' "${file}"      # Accept password login (overwrite Debian 8+'s more secure default option...)
+sed -i 's/^#AuthorizedKeysFile /AuthorizedKeysFile /g' "${file}"    # Allow for key based login
+#sed -i 's/^Port .*/Port 2222/g' "${file}"
+#--- Enable ssh at startup
+#systemctl enable ssh
+#--- Setup alias (handy for 'zsh: correct 'ssh' to '.ssh' [nyae]? n')
+file=~/.bash_aliases; [ -e "${file}" ] && cp -n $file{,.bkup}   #/etc/bash.bash_aliases
+([[ -e "${file}" && "$(tail -c 1 ${file})" != "" ]]) && echo >> "${file}"
+grep -q '^## ssh' "${file}" 2>/dev/null \
+  || echo -e '## ssh\nalias ssh-start="systemctl restart ssh"\nalias ssh-stop="systemctl stop ssh"\n' >> "${file}"
+#--- Apply new alias
+source "${file}" || source ~/.zshrc
 
-if ! foobar_loc="$(type -p "ssh")" || [ -z "$foobar_loc" ]; then
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Setting up ${GREEN}SSH ${ORANGE} ~ CLI access ${RESET} "
-  #apt -y -qq install openssh-server \
-  apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y openssh-server \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-else
-  #--- Wipe current keys
-  rm -f /etc/ssh/ssh_host_*
-  find ~/.ssh/ -type f ! -name authorized_keys -delete 2>/dev/null
-  #--- Generate new keys
-  ssh-keygen -b 4096 -t rsa1 -f /etc/ssh/ssh_host_key -P "" >/dev/null
-  ssh-keygen -b 4096 -t rsa -f /etc/ssh/ssh_host_rsa_key -P "" >/dev/null
-  ssh-keygen -b 1024 -t dsa -f /etc/ssh/ssh_host_dsa_key -P "" >/dev/null
-  ssh-keygen -b 521 -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -P "" >/dev/null
-  ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -P "" >/dev/null
-  #--- Change MOTD
-  apt -y -qq install cowsay \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-  echo "I see you" | /usr/games/cowsay -f eyes > /etc/motd
-  #--- Change SSH settings
-  file=/etc/ssh/sshd_config; [ -e "${file}" ] && cp -n $file{,.bkup}
-  sed -i 's/^PermitRootLogin .*/PermitRootLogin yes/g' "${file}"      # Accept password login (overwrite Debian 8+'s more secure default option...)
-  sed -i 's/^#AuthorizedKeysFile /AuthorizedKeysFile /g' "${file}"    # Allow for key based login
-  #sed -i 's/^Port .*/Port 2222/g' "${file}"
-  #--- Enable ssh at startup
-  #systemctl enable ssh
-  #--- Setup alias (handy for 'zsh: correct 'ssh' to '.ssh' [nyae]? n')
-  file=~/.bash_aliases; [ -e "${file}" ] && cp -n $file{,.bkup}   #/etc/bash.bash_aliases
-  ([[ -e "${file}" && "$(tail -c 1 ${file})" != "" ]]) && echo >> "${file}"
-  grep -q '^## ssh' "${file}" 2>/dev/null \
-    || echo -e '## ssh\nalias ssh-start="systemctl restart ssh"\nalias ssh-stop="systemctl stop ssh"\n' >> "${file}"
-  #--- Apply new alias
-  source "${file}" || source ~/.zshrc
-fi
 
 #### Install mysql
-if ! foobar_loc="$(type -p "mysql")" || [ -z "$foobar_loc" ]; then
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing MySQL ${ORANGE} ~ Database ${RESET} "
-  apt -y -qq install mariadb-server \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-else
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuration for MySQL has been changed ${ORANGE} ~ Database ${RESET} "
-  echo -e " ${YELLOW}[i]${GREEN} MySQL username: ${ORANGE} root"
-  echo -e " ${YELLOW}[i]${GREEN} MySQL password: ${ORANGE} <blank>   ***${BOLD}CHANGE THIS ASAP${RESET}***"
-  [[ -e ~/.my.cnf ]] \
-    || cat <<EOF > ~/.my.cnf
-  [client]
-  user=root
-  host=localhost
-  password=
-
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing MySQL ${ORANGE} ~ Database ${RESET} "
+apt -y -qq install mysql-server \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+echo -e " ${YELLOW}[i]${GREEN} MySQL username: ${ORANGE} root"
+echo -e " ${YELLOW}[i]${GREEN} MySQL password: ${ORANGE} <blank>   ***${BOLD}CHANGE THIS ASAP${RESET}***"
+[[ -e ~/.my.cnf ]] \
+  || cat <<EOF > ~/.my.cnf
+[client]
+user=root
+host=localhost
+password=
 EOF
-fi
 
 
 #### Install apache2 & php
-
-if ! foobar_loc="$(type -p "apache2")" || [ -z "$foobar_loc" ]; then
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Apache2${RESET} & ${GREEN} PHP ${ORANGE} ~ Web Server ${RESET} "
-  apt -y -qq install apache2 php php-cli php-curl \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-else
-  touch /var/www/html/favicon.ico
-  grep -q '<title>Apache2 Debian Default Page: It works</title>' /var/www/html/index.html 2>/dev/null \
-    && rm -f /var/www/html/index.html \
-    && echo '<?php echo "Access denied for " . $_SERVER["REMOTE_ADDR"]; ?>' > /var/www/html/index.php \
-    && echo -e 'User-agent: *n\Disallow: /\n' > /var/www/html/robots.txt
-  #--- Setup alias
-  file=~/.bash_aliases; [ -e "${file}" ] && cp -n $file{,.bkup}   #/etc/bash.bash_aliases
-  ([[ -e "${file}" && "$(tail -c 1 ${file})" != "" ]]) && echo >> "${file}"
-  grep -q '^## www' "${file}" 2>/dev/null \
-    || echo -e '## www\nalias wwwroot="cd /var/www/html/"\n' >> "${file}"
-  #--- Apply new alias
-  source "${file}" || source ~/.zshrc
-fi
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Apache2${RESET} & ${GREEN} PHP ${ORANGE} ~ Web Server ${RESET} "
+apt -y -qq install apache2 php php-cli php-curl \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+touch /var/www/html/favicon.ico
+grep -q '<title>Apache2 Debian Default Page: It works</title>' /var/www/html/index.html 2>/dev/null \
+  && rm -f /var/www/html/index.html \
+  && echo '<?php echo "Access denied for " . $_SERVER["REMOTE_ADDR"]; ?>' > /var/www/html/index.php \
+  && echo -e 'User-agent: *n\Disallow: /\n' > /var/www/html/robots.txt
+#--- Setup alias
+file=~/.bash_aliases; [ -e "${file}" ] && cp -n $file{,.bkup}   #/etc/bash.bash_aliases
+([[ -e "${file}" && "$(tail -c 1 ${file})" != "" ]]) && echo >> "${file}"
+grep -q '^## www' "${file}" 2>/dev/null \
+  || echo -e '## www\nalias wwwroot="cd /var/www/html/"\n' >> "${file}"
+#--- Apply new alias
+source "${file}" || source ~/.zshrc
 
 #--- Copying Windows-binaries to Apache folder
 cp -r /usr/share/windows-binaries /var/www/html
+
 
 
 #### Setup tftp client & server
@@ -592,6 +594,8 @@ systemctl disable atftpd
 
 #--- Copying Windows-binaries to tftp folder
 cp -r /usr/share/windows-binaries /var/tftp/
+
+
 
 #### Install Pure-FTPd
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Pure-FTPd${ORANGE} ~ FTP server/file transfer method ${RESET} "
@@ -640,80 +644,9 @@ source "${file}" || source ~/.zshrc
 #--- Remove from start up
 systemctl disable pure-ftpd
 
-#### Installing Tilda
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Tilda ${ORANGE} ~ Pop Up Terminal Emulator ${RESET}"
-apt-get -y -q install tilda
-#Adding Tilda to startup
-cp /usr/share/applications/tilda.desktop ~/.config/autostart/
-#--- Creating Config File
-nohup /usr/bin/tilda tilda &
-echo $! > save_pid.txt
-sleep 1
-kill -15 `cat save_pid.txt`
-echo -e "${ORANGE} [i]${ORANGE} Our PID for Tilda was: ${RESET}`cat save_pid.txt` ${RESET}"
-rm save_pid.txt
-#-- Editing Config File
-file=~/.config/tilda/config_0; [ -e "${file}" ] && cp -n $file{,.bkup}
-sed -i 's/key=".*"/key="F2"/' "${file}"
-sed -i 's/double_buffer=.*/double_buffer=true/' "${file}"
-sed -i 's/hidden=.*/hidden=true/' "${file}"
-sed -i 's/copy_key=".*"/copy_key="<Control>c"/' "${file}"
-sed -i 's/scroll_history_infinite=.*/scroll_history_infinite=true/' "${file}"
-sed -i 's/max_height=.*/max_height=200/' "${file}"
-sed -i 's/max_witdh=.*/max_witdh=600/' "${file}"
-# --
-nohup /usr/bin/tilda &
-
-
-#### Installing Dropbox
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Dropbox ${ORANGE} ~ Keep up your files on the cloud ${RESET} "
-#--- If running 64 bits
-if [[ "$(uname -m)" == 'x86_64' ]]; then
-  #  Hardcoded Links
-  cd ~ && wget "https://www.dropbox.com/download?dl=packages/debian/dropbox_2015.10.28_amd64.deb" -O dropbox_2015_64.deb
-  dpkg -i dropbox_2015_64.deb
-  rm dropbox_2015_64.deb
-  else
-  cd ~ && wget "https://www.dropbox.com/download?dl=packages/debian/dropbox_2015.10.28_i386.deb" -O dropbox_2015_x86.deb
-  dpkg -i dropbox_2015_x86.deb
-  rm rm dropbox_2015_x86.deb
-fi
-
-#--- Create start script
-ile=~/.config/autostart/dropbox.desktop; [ -e "${file}" ] && cp -n $file{,.bkup}
-cat <<EOF > "${file}" \
-  || echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
-[Desktop Entry]
-Name=Dropbox
-GenericName=File Synchronizer
-Comment=Sync your files across computers and to the web
-Exec=dropbox start -i
-Terminal=false
-Type=Application
-Icon=dropbox
-Categories=Network;FileTransfer;
-StartupNotify=false
-EOF
-
-
-
-#### Installing Chromium
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Chromium ${ORANGE} ~ Web browser ${RESET}"
-apt-get -y -q install chromium
-file=/etc/chromium.d/default-flags.bkup;
-if [[ -f "${file}" ]]; then
-  echo -e ' '${RED}'[!]'${RESET}" ${file} detected. Skipping..." 1>&2
-else
-  #-- Edit CHROMIUM_FLAGS to run as Root
-  file=/etc/chromium.d/default-flags; [ -e "${file}" ] && cp -n $file{,.bkup}
-  echo -e "# Run as root Kali" >> "${file}"
-  echo -e 'export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --password-store=detect --no-sandbox --user-data-dir --start-maximized" ' >> "${file}"
-  echo -e "${ORANGE}[i]${GREEN} Chromium is installed ${RESET}"
-fi
-
-
 #--- Copying Windows-binaries to ftp folder
 cp -r /usr/share/windows-binaries /var/ftp/
+
 
 TEXT='  FTP, Aapache & TFTP have been enabled'
 notice--

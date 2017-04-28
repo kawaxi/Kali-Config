@@ -3,6 +3,7 @@
 full--()
 {
 
+
 #### Install metasploit ~ http://docs.kali.org/general-use/starting-metasploit-framework-in-kali
 if [[ "${openVAS}" != "false" ]]; then
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing metasploit ${ORANGE} ~ Exploit Framework ${RESET} "
@@ -271,15 +272,9 @@ chmod +x "${file}"
 
 
 #### Install Daemonfs - GUI file monitor
-
-if ! foobar_loc="$(type -p "daemonfs")" || [ -z "$foobar_loc" ]; then
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing daemonfs ${ORANGE} ~ GUI File Monitor ${RESET}"
 apt -y -qq install daemonfs \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-else
-  echo -e "\n\n ${GREEN}[*]${RESET} ${ORANGE} daemonfs is already installed.... Skipping ${ORANGE} ${RESET}"
-fi
-
 
 #### Install VPN support
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing VPN Support for Network-Manager ${RESET}"
@@ -288,7 +283,8 @@ for FILE in network-manager-openvpn network-manager-pptp network-manager-vpnc ne
     || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 done
 
-#### Install Vulscan script for nmap
+
+#### Install vulscan script for nmap
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing ${GREEN}Vulscan Script for Nmap ${ORANGE} ~ Vulnerability Scanner Add-On ${RESET}"
 mkdir -p /usr/share/nmap/scripts/vulscan/
 timeout 300 curl --progress -k -L -f "http://www.computec.ch/projekte/vulscan/download/nmap_nse_vulscan-2.0.tar.gz" > /tmp/nmap_nse_vulscan.tar.gz \
@@ -348,7 +344,7 @@ unzip -q -o -d /usr/share/windows-binaries/ /usr/share/windows-binaries/AccessCh
 rm -f /usr/share/windows-binaries/{AccessChk.zip,Eula.txt}
 
 
-#### Downloading PsExec.exeif ! foobar_loc="$(type -p "wine")" || [ -z "$foobar_loc" ]; then
+#### Downloading PsExec.exe
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Downloading PsExec.exe ${ORANGE} ~ Pass The Hash 'phun' ${RESET}"
 apt -y -qq install windows-binaries \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
@@ -394,43 +390,69 @@ ln -sf /opt/packers/ /usr/share/windows-binaries/packers
 #### Install gcc & multilib
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing ${GREEN}gcc${RESET} & ${GREEN}multilibc ${ORANGE} ~ Compiling Libraries ${RESET} "
 for FILE in cc gcc g++ gcc-multilib make automake libc6 libc6-dev libc6-amd64 libc6-dev-amd64 libc6-i386 libc6-dev-i386 libc6-i686 libc6-dev-i686 build-essential dpkg-dev; do
- if dpkg-query -l "${FILE}" 2>/dev/null | grep ^ii >/dev/null;
+  if [ $(dpkg-query -W -f='${Status}' "${FILE}" 2>/dev/null | grep -c "ok installed") -eq 0 ];
   then
-     echo -e "\n\n ${GREEN}[*]${RESET} ${WHITE} "${FILE}" is already installed ${ORANGE} ${RESET}\n"
+    apt -y -qq install "${FILE}" 2>/dev/null
   else
-    apt install -y -qq "${FILE}"
+    echo -e "\n\n ${GREEN}[*]${RESET} ${WHITE} "${FILE}" is already installed ${ORANGE} ${RESET}\n"
   fi
 done
+
+
+#
+# (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing ${GREEN}gcc${RESET} & ${GREEN}multilibc ${ORANGE} ~ Compiling Libraries ${RESET} "
+# for FILE in cc gcc g++ gcc-multilib make automake libc6 libc6-dev libc6-amd64 libc6-dev-amd64 libc6-i386 libc6-dev-i386 libc6-i686 libc6-dev-i686 build-essential dpkg-dev; do
+#  if dpkg-query -l "$FILE" > /dev/null 2>&1;
+#   then
+#     echo -e "\n\n ${GREEN}[*]${RESET} ${ORANGE} "${FILE}" is already installed ${ORANGE} ${RESET}";
+#   else
+#     echo -e "\n\n ${GREEN}[*]${RESET} ${ORANGE} Installing  "${FILE}"  ${ORANGE} ${RESET}";
+#      apt -y -qq install "$FILE"; \
+#     	 echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+#   fi
+# done
+
+
+
+# (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing ${GREEN}gcc${RESET} & ${GREEN}multilibc ${ORANGE} ~ Compiling Libraries ${RESET} "
+# for FILE in cc gcc g++ gcc-multilib make automake libc6 libc6-dev libc6-amd64 libc6-dev-amd64 libc6-i386 libc6-dev-i386 libc6-i686 libc6-dev-i686 build-essential dpkg-dev; do
+#  PKG_OK=$(dpkg-query -W --showformat='${Status}\n' "${FILE}"|grep "install ok installed")
+#  if [ "" == "${PKG_OK}" ]; then
+#    apt-get -y -qq install "${FILE}"
+#  else
+#    echo -e "\n\n ${GREEN}[*]${RESET} ${ORANGE} "${FILE}" is already installed ${ORANGE} ${RESET}\n\n";
+#  fi
+#
+# done
+
 
 
 #### Install MinGW ~ cross compiling suite
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing MinGW ${ORANGE} ~ Cross Compiling Suite${RESET}"
 for FILE in mingw-w64 binutils-mingw-w64 gcc-mingw-w64 cmake   mingw-w64-dev mingw-w64-tools   gcc-mingw-w64-i686 gcc-mingw-w64-x86-64   mingw32; do
-  #---  Just install what's missing
-  if dpkg-query -l "${FILE}" 2>/dev/null | grep ^ii >/dev/null;
+  if [ ! $(dpkg-query -W -f='${Status}' "${FILE}" 2>/dev/null | grep -c "ok installed") -eq 0 ];
   then
-    echo -e "\n\n ${GREEN}[*]${RESET} ${WHITE} "${FILE}" is already installed ${ORANGE} ${RESET}\n"
+    apt -y -qq install "${FILE}" 2>/dev/null
   else
-      apt install -y -qq "${FILE}"
+    echo -e "\n\n ${GREEN}[*]${RESET} ${GREEN} Cross Compiling Suite MinGW ${ORANGE} is Already Installed.... Skipping  ${RESET}"
   fi
 done
 
 
 #### Install WINE
 #--- Already Installed?
-
-if ! foobar_loc="$(type -p "winetricks")" || [ -z "$foobar_loc" ]; then
+if ! foobar_loc="$(type -p "wine")" || [ -z "$foobar_loc" ]; then
   (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing WINE${ORANGE} ~ Run Windows Programs on *nix${RESET}"
   apt -y -qq install wine winetricks \
     || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
   #--- Using x64?
-    if [[ "$(uname -m)" == 'x86_64' ]]; then
-      (( STAGE++ )); echo -e " ${ORANGE}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Configuring ${ORANGE}WINE ${RESET}(x64) "
-      dpkg --add-architecture i386
-      apt -qq update
-      apt -y -qq install wine32 \
-        || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-    fi
+  if [[ "$(uname -m)" == 'x86_64' ]]; then
+    (( STAGE++ )); echo -e " ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Configuring ${GREEN}WINE (x64) ${RESET}"
+    dpkg --add-architecture i386
+    apt -qq update
+    apt -y -qq install wine32 \
+      || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+  fi
   #--- Run WINE for the first time
   [ -e /usr/share/windows-binaries/whoami.exe ] && wine /usr/share/windows-binaries/whoami.exe &>/dev/null
   #--- Setup default file association for .exe
@@ -444,6 +466,8 @@ fi
 
 #### Install MinGW (Windows) ~ cross compiling suite
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing MinGW (Windows) ${ORANGE} ~ Cross Compiling Suite ${RESET}"
+# apt -y -qq install wine \
+#   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 timeout 300 curl --progress -k -L -f "http://sourceforge.net/projects/mingw/files/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip/download" > /tmp/mingw-get.zip \
   || echo -e ' '${RED}'[!]'${RESET}" Issue downloading mingw-get.zip" 1>&2       #***!!! hardcoded path!
 mkdir -p ~/.wine/drive_c/MinGW/bin/
@@ -456,6 +480,9 @@ popd >/dev/null
 #--- Add to windows path
 grep -q '^"PATH"=.*C:\\\\MinGW\\\\bin' ~/.wine/system.reg \
   || sed -i '/^"PATH"=/ s_"$_;C:\\\\MinGW\\\\bin"_' ~/.wine/system.reg
+
+
+
 
 #### Install hyperion
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing hyperion ${ORANGE} ~ Bypassing Anti-Virus ${RESET}"
@@ -501,14 +528,14 @@ chmod +x "${file}"
 
 
 #### Install Backdoor Factory Proxy (BDFProxy)
-
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Backdoor Factory Proxy (BDFProxy) ${ORANGE} ~ Patches Binaries Files During a MITM ${RESET}"
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Backdoor Factory Proxy (BDFProxy) ${ORANGE} ~ Patches Binaries Files DSuring a MITM ${RESET}"
 apt -y -qq install bdfproxy \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
+
 #### Install BetterCap
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing BetterCap ${ORANGE} ~ MITM Framework ${RESET} "
-apt -y -qq install ruby-dev libpcap-dev \
+apt -y -qq install git ruby-dev libpcap-dev \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 git clone -q -b master https://github.com/evilsocket/bettercap.git /opt/bettercap-git/ \
   || echo -e ' '${RED}'[!] Issue when git cloning'${RESET} 1>&2
@@ -518,10 +545,12 @@ gem build bettercap.gemspec
 gem install bettercap*.gem
 popd >/dev/null
 
+
 #### Install mitmf
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing MITMf ${ORANGE} ~ Framework for MITM Attacks ${RESET}"
 apt -y -qq install mitmf \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+
 
 #### Install seclist
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Seclist ${ORANGE} ~ Multiple Types of Word lists and similar ${RESET}"
@@ -533,9 +562,10 @@ apt -y -qq install wordlists \
 [ -e /usr/share/seclists ] \
   && ln -sf /usr/share/seclists /usr/share/wordlists/seclists
 
+
 #### Update wordlists
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Updating Wordlists ${ORANGE} ~ Collection of Wordlists ${RESET}"
-apt -y -qq install wordlists \
+apt -y -qq install wordlists curl \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 #--- Extract rockyou wordlist
 [ -e /usr/share/wordlists/rockyou.txt.gz ] \
@@ -652,27 +682,26 @@ chmod +x "${file}"
 
 
 #### Install Crowbar -- brute force"
-if ! foobar_loc="$(type -p "crowbar-git")" || [ -z "$foobar_loc" ]; then
-  rm -r /opt/crowbar-git # in Case its already installed
-else
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing crowbar ${ORANGE} ~ Brute Force Tool ${RESET}"
-  apt -y -qq install freerdp-x11 tigervnc-viewer \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-  git clone -q -b master https://github.com/galkan/crowbar.git /opt/crowbar-git/ \
-    || echo -e ' '${RED}'[!] Issue when git cloning'${RESET} 1>&2
-  pushd /opt/crowbar-git/ >/dev/null
-  git pull -q
-  popd >/dev/null
-  #--- Add to path
-  mkdir -p /usr/local/bin/
-  file=/usr/local/bin/crowbar-git
-  cat <<EOF > "${file}" \
-    || echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
-  #!/bin/bash
-  cd /opt/crowbar-git/ && python crowbar.py "\$@"
+
+rm -r /opt/crowbar-git # in Case its already installed
+
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing crowbar ${ORANGE} ~ Brute Force Tool ${RESET}"
+apt -y -qq install git openvpn freerdp-x11 tigervnc-viewer \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+git clone -q -b master https://github.com/galkan/crowbar.git /opt/crowbar-git/ \
+  || echo -e ' '${RED}'[!] Issue when git cloning'${RESET} 1>&2
+pushd /opt/crowbar-git/ >/dev/null
+git pull -q
+popd >/dev/null
+#--- Add to path
+mkdir -p /usr/local/bin/
+file=/usr/local/bin/crowbar-git
+cat <<EOF > "${file}" \
+  || echo -e ' '${RED}'[!] Issue with writing file'${RESET} 1>&2
+#!/bin/bash
+cd /opt/crowbar-git/ && python crowbar.py "\$@"
 EOF
-  chmod +x "${file}"
-fi
+chmod +x "${file}"
 
 #### Install xprobe  -- OS fingerprinting
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing xprobe ${ORANGE} ~ OS Fingerprinting ${RESET}"
@@ -682,7 +711,7 @@ apt -y -qq install xprobe \
 
 #### Install UACScript
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing UACScript ${ORANGE} ~ UAC Bypass for Windows 7 ${RESET}"
-apt -y -qq install windows-binaries \
+apt -y -qq install git windows-binaries \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 git clone -q -b master https://github.com/Vozzie/uacscript.git /opt/uacscript-git/ \
   || echo -e ' '${RED}'[!] Issue when git cloning'${RESET} 1>&2
@@ -708,6 +737,9 @@ apt -y -qq install golang \
 apt -y -qq install gitg \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 
+
+
+
 #### Install Gnmap-Parser (fork)
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Gnmap-Parser (fork) ${ORANGE} ~ Parse Nmap Exports into various plain-text formats ${RESET}"
 git clone -q -b master https://github.com/nullmode/gnmap-parser.git /opt/gnmap-parser-git/ \
@@ -723,6 +755,8 @@ ln -sf /opt/gnmap-parser-git/gnmap-parser.sh /usr/local/bin/gnmap-parser-git
 
 #### Install udp-proto-scanner
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing UDP-Proto-Scanner ${ORANGE} ~ Common UDP Port Scanner ${RESET}"
+apt -y -qq install curl \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 timeout 300 curl --progress -k -L -f "https://labs.portcullis.co.uk/download/udp-proto-scanner-1.1.tar.gz" -o /tmp/udp-proto-scanner.tar.gz \
   || echo -e ' '${RED}'[!]'${RESET}" Issue downloading udp-proto-scanner.tar.gz" 1>&2
 gunzip /tmp/udp-proto-scanner.tar.gz
@@ -740,13 +774,10 @@ chmod +x "${file}"
 
 
 #### Install clusterd
-if ! foobar_loc="$(type -p "clusterd")" || [ -z "$foobar_loc" ]; then
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Clusterd ${ORANGE} ~ Clustered Attack Toolkit (JBoss, ColdFusion, WebLogic, Tomcat etc) ${RESET}"
-  apt -y -qq install clusterd \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-else
-  echo -e "\n\n ${ORANGE}[i]${RESET} ${GREEN} Cluster is already installed.... ${YELLOW} Skipping  ${RESET}"
-fi
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Clusterd ${ORANGE} ~ Clustered Attack Toolkit (JBoss, ColdFusion, WebLogic, Tomcat etc) ${RESET}"
+apt -y -qq install clusterd \
+  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+
 
 #### Install webhandler
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Webhandler ${ORANGE} ~ Shell TTY Handler ${RESET}"
@@ -766,10 +797,10 @@ git pull -q
 popd >/dev/null
 
 #### Install gobuster
-
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Gobuster ${ORANGE} ~ Directory/File/DNS Busting tool ${RESET}"
+(( STAGE++ )); echo -e "\n\n${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Gobuster ${ORANGE} ~ Directory/File/DNS Busting tool ${RESET}"
 apt -y -qq install gobuster \
   || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+
 
 #### Install reGeorg
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing ReGeorg ${ORANGE} ~ Pivot Via Web Shells ${RESET}"
@@ -788,8 +819,8 @@ ln -sf /opt/reGeorg-git /usr/share/webshells/reGeorg
 (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Installing Subterfuge ${ORANGE} ~ MITM ${RESET}"
 git clone -q -b master https://github.com/Subterfuge-Framework/Subterfuge.git /opt/subterfuge-git \
   || echo -e ' '${RED}'[!] Issue when git cloning'${RESET} 1>&2
-# sleep 6
-# xdotool key y Return
+sleep 6
+xdotool key y Return
 python /opt/subterfuge-git/setup.py \
   || echo -e ' '${RED}'[!] Issue whith apt-install'${RESET} 1>&2
 

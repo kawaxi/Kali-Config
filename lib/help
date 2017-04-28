@@ -1,6 +1,6 @@
-#!/bin/bash
 
-#### Function help 
+
+#-- Function help ####
 
 
 help--(){
