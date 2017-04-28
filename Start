@@ -208,18 +208,8 @@ F=58
 
 # ---------- Start ---------- #
 
-#--- Sync time
-apt -y -qq install ntp ntpdate \
-  || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-#--- Update time
-ntpdate -b -s -u pool.ntp.org
-#--- Start service
-systemctl restart ntp
-#--- Remove from start up
-systemctl disable ntp 2>/dev/null
-#--- Only used for stats at the end
-start_time=$(date +%s)
 
+start_time=$(date +%s) #Used for time Stats
 
 #--- So you can watch progress , another options is  gsettings set org.gnome.desktop.lockdown disable-lock-screen true
 gsettings set org.gnome.desktop.screensaver lock-enabled false
@@ -267,20 +257,11 @@ EOF
   chmod +x "${file}"
   ln -sf "${file}" /root/Desktop/mount-shared-folders.sh
 
-
-# Fixing Time Sync Problem by updating rc.d
-# https://www.digitalocean.com/community/tutorials/how-to-configure-a-linux-service-to-start-automatically-after-a-crash-or-reboot-part-1-practical-examples#step-1-%E2%80%94-connecting-to-your-debian-6-droplet
-
-#systemctl enable open-vm-tools.service <---- enable this if you have problems with vmtools
-#update-rc.d open-vm-tools enable
-#systemctl restart open-vm-tools.service <---- enable this if you have problems with vmtools
-
 # Fixing Time Sync Problem by updating rc.d 
 # https://www.digitalocean.com/community/tutorials/how-to-configure-a-linux-service-to-start-automatically-after-a-crash-or-reboot-part-1-practical-examples#step-1-%E2%80%94-connecting-to-your-debian-6-droplet
 systemctl enable open-vm-tools.service
 #update-rc.d open-vm-tools enable
 systemctl restart open-vm-tools.service
-
 # If this doest fix the problem , add Restart=on-failure under Service ; /etc/systemd/system/multi-user.target.wants/open-vm-tools.service
 #file=/etc/systemd/system/multi-user.target.wants/open-vm-tools.service
 
@@ -357,6 +338,7 @@ fi
 TEXT='Cleaning initiated, please wait'
 notice--
 clean--
+
 
 # ---------- Time taken ---------- #
 finish_time=$(date +%s)

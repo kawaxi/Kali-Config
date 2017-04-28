@@ -2,9 +2,7 @@
 
 clean--() {
 
-
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Cleaning the system ${RESET}"
-
+(( STAGE++ )); echo -e "\n\n ${YELLOW}[*]${RESET} (${STAGE}/${TOTAL}) ${ORANGE}Cleaning the system ${RESET}"
 #--- Clean package manager
 for FILE in clean autoremove; do apt -y -qq "${FILE}"; done
 # Purged packages
