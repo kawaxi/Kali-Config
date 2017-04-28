@@ -1,0 +1,25 @@
+#!/bin/bash
+
+file=~/.config/hexchat/hola.conf; [ -e "${file}" ] && cp -n $file{,.bkup}
+([[ -e "${file}" && "$(tail -c 1 ${file})" != "" ]]) && echo >> "${file}"
+grep -q '^N=Bouncer Elite=' "${file}" 2>/dev/null \
+  || echo -e 'N=Bouncer Elite
+I=kawaxi
+U=Kawaxi
+P=021284
+E=UTF-8 (Unicode)
+F=53
+D=1
+S=sigma.elitebnc.org/1338
+C=NickServ
+Identify 021284
+J=#offsec
+J=#metasploit
+J=#kali-linux
+J=##security
+J=##ha
+J=#owasp
+J=#hackerone
+J=##hackers' >> "${file}"
+
+exit 0

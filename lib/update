@@ -4,7 +4,7 @@
 update--()
 {
 
-  if [ -z "$CONDITION" ] || [ "$CONDITION" == Y ] || [ "$CONDITION" == y ]; then
+#  if [ -z "$CONDITION" ] || [ "$CONDITION" == Y ] || [ "$CONDITION" == y ]; then
   (( STAGE++ )); echo -e "\n\n ${YELLOW}[*]${WHITE} (${STAGE}/${TOTAL}) ${UBlue} Update & Upgrade your system ${RESET}"
   #--- Add network repositories
   file=/etc/apt/sources.list; [ -e "${file}" ] && cp -n $file{,.bkup}
@@ -18,50 +18,23 @@ update--()
   #--- Disable CD repositories
   sed -i '/kali/ s/^\( \|\t\|\)deb cdrom/#deb cdrom/g' "${file}"
   #--- incase we were interrupted
-  dpkg --configure -a
+  #dpkg --configure -a
   #--- Update
-   for FILE in clean autoremove; do apt -y -qq "${FILE}"; done         # Clean up      clean remove autoremove autoclean
-  export DEBIAN_FRONTEND=noninteractive
-  apt -qq update && APT_LISTCHANGES_FRONTEND=none apt -o Dpkg::Options::="--force-confnew" -y \
-    || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-  ####--- Cleaning up temp stuff
-  for FILE in clean autoremove; do apt -y -qq "${FILE}"; done         # Clean up - clean remove autoremove autoclean
-  ####--- Check kernel stuff
-  _TMP=$(dpkg -l | grep linux-image- | grep -vc meta)
-  if [[ "${_TMP}" -gt 1 ]]; then
-    echo -e "\n ${YELLOW}[i]${RESET} Detected ${YELLOW}multiple kernels${RESET}"
-    TMP=$(dpkg -l | grep linux-image | grep -v meta | sort -t '.' -k 2 -g | tail -n 1 | grep "$(uname -r)")
-    if [[ -z "${TMP}" ]]; then
-      echo -e '\n '${RED}'[!]'${RESET}' You are '${RED}'not using the latest kernel'${RESET} 1>&2
-      echo -e " ${YELLOW}[i]${RESET} You have it ${YELLOW}downloaded${RESET} & installed, just ${YELLOW}not USING IT${RESET}"
-      #echo -e "\n ${YELLOW}[i]${RESET} You ${YELLOW}NEED to REBOOT${RESET}, before re-running this script"
-      #exit 1
+  # Clean up      clean remove autoremove autoclean
 
-  #### Install kernel headers
-      (( STAGE++ )); echo -e "\n\n ${YELLOW}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}  Installing kernel headers${WHITE}"
-      apt -y -qq install make gcc "linux-headers-$(uname -r)" \
-        || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-      if [[ $? -ne 0 ]]; then
-        echo -e ' '${RED}'[!]'${RESET}" There was an ${RED}issue installing kernel headers${RESET}" 1>&2
-        echo -e " ${YELLOW}[i]${RESET} Are you ${YELLOW}USING${RESET} the ${YELLOW}latest kernel${RESET}?"
-        echo -e " ${YELLOW}[i]${RESET} ${YELLOW}Reboot${RESET} your machine"
-        #exit 1
-        sleep 30s
-      fi
+  #Saving some Config Files we will need.
+  file=/etc/ssh/sshd_config; [ -e "${file}" ] && cp -n $file{,.bkup}
 
-      fi
-    else
-      echo -e " ${YELLOW}[i]${RESET} ${YELLOW}You're using the latest kernel${RESET} (Good to continue)"
-    fi
-  fi
+  # apt-mark hold openssh-server bash-completion cc gcc g++ gcc-multilib make automake libc6 libc6-dev libc6-amd64 libc6-dev-amd64 libc6-i386 libc6-dev-i386 libc6-i686 libc6-dev-i686 build-essential dpkg-dev
+  #
+   apt-get update && apt-get upgrade -yq
+  #
+  # apt-mark hold openssh-server
 
-
-
-
-
-  ##### Time taken for Update
+  #### Time taken for Update
   finishtime=$(date +%s)
-  echo -e "\n\n ${YELLOW}[i]${RESET} Time (roughly) taken: ${YELLOW}$(( $(( finishtime - time )) / 60 )) minutes"
+  echo -e "\n\n ${YELLOW}[i]${RESET} Time (roughly) taken: ${YELLOW}$(( $(( finishtime - time )) / 60 )) minutes ${RESET}"
+
 
 
 }

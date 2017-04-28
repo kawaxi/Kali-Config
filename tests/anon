@@ -1,0 +1,12 @@
+!#/bin/bash
+
+
+echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN}Installing Anonym8 ${ORANGE} ~ Privacy Friend ${RESET}"
+git clone -q -b master https://github.com/HiroshiManRise/anonym8 /tmp/anonym8/ \
+  || echo -e ' '${RED}'[!] Issue when git cloning'${RESET} 1>&2
+pushd /tmp/anonym8/ >/dev/null
+git pull -q
+popd >/dev/null
+cd /tmp/anonym8 && chmod 755 INSTALL.sh && ./INSTALL.sh
+sleep 3
+xdotool key y Return

@@ -8,8 +8,21 @@ notice--
 
 if [[ $(which gnome-shell) ]]; then
   ##### Configure GNOME 3
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuring GNOME 3 ${ORANGE} ~ desktop environment ${RESET}"
+  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuring GNOME 3 ${ORANGE} ~ Desktop environment ${RESET}"
   export DISPLAY=:0.0
+
+
+  #--- Installing Caffeine Extension ---#
+  git clone git://github.com/eonpatapon/gnome-shell-extension-caffeine.git && cd gnome-shell-extension-caffeine
+  ./update-locale.sh
+  glib-compile-schemas --strict --targetdir=caffeine@patapon.info/schemas/ caffeine@patapon.info/schemas
+  #--- Adding to Gsettings
+  cp -r caffeine@patapon.info /usr/share/gnome-shell/extensions/
+  cp ~/gnome-shell-extension-caffeine/caffeine@patapon.info/schemas/org.gnome.shell.extensions.caffeine.gschema.xml \
+  /usr/share/glib-2.0/schemas/ && glib-compile-schemas /usr/share/glib-2.0/schemas/
+  rm -r /root/gnome-shell-extension-caffeine
+  gnome-shell-extension-tool -e caffeine@patapon.info
+  gsettings set org.gnome.shell.extensions.caffeine user-enabled true
 
 
   #--- Windows List Extension
@@ -54,32 +67,36 @@ if [[ $(which gnome-shell) ]]; then
   # dconf write /org/gnome/shell/extensions/dash-to-dock/require-pressure-to-show false
   # dconf write /org/gnome/shell/extensions/dash-to-dock/hide-delay 0.200
 
-##### Disable screensaver
-  echo -e "\n\n ${GREEN}[i] ${GREEN}Lets Start Tweaking GNOME ...${RESET}"
-  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Disabling screensaver${RESET}"
-  xset s 0 0
-  xset s off
-  gsettings set org.gnome.desktop.session idle-delay 0
+  # Let's Control it using Caffeine for now
+  #--- Disable screensaver
+  # echo -e "\n\n ${GREEN}[i] ${GREEN}Lets Start Tweaking GNOME ...${RESET}"
+  # (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL})${GREEN} Disabling screensaver${RESET}"
+  # xset s 0 0
+  # xset s off
+  # gsettings set org.gnome.desktop.session idle-delay 0
+
+  # Applying Changes to gnome
+  nohup gnome-shell --replace &
+
+  #--- Adding favorites to our Gnome Dash-to-dock   x64
+  if [[ "$(uname -m)" == 'x86_64' ]]; then
+      gsettings set org.gnome.shell favorite-apps "['chromium.desktop', 'firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop', 'atom.desktop', 'keepnote.desktop', 'icedove.desktop', 'shutter.desktop', 'hexchat.desktop']"
+  else
+  #--- Adding favorites to our Gnome Dash-to-dock  x64
+      gsettings set org.gnome.shell favorite-apps "['chromium.desktop', 'firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop','sublime_text.desktop', 'keepnote.desktop', 'icedove.desktop', 'shutter.desktop' , 'hexchat.desktop']"
+  fi
+
+  ##### Configure GNOME terminal ;  Note: need to restart xserver for effect
+  (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuring GNOME terminal${ORANGE} ~ CLI interface"
+  gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited true
+  gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/background_type transparent
+  gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/background_darkness 0.85611499999999996
+
+
 else
-  echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping  from disabling package updater${RESET}..."
+  echo -e "\n\n ${YELLOW}[i]${RESET} ${YELLOW}Skipping Gnome it's not installed ${RESET}..."
 fi
 
-
-#--- Adding favorites to our Gnome   x64
-
-if [[ "$(uname -m)" == 'x86_64' ]]; then
-  gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop','atom.desktop', 'keepnote.desktop', 'icedove.desktop', 'shutter.desktop' , 'hexchat.desktop']"
-else
-#--- Adding favorites to our Gnome   x64
-
-  gsettings set org.gnome.shell favorite-apps "['firefox-esr.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'terminator.desktop', 'kali-msfconsole.desktop', 'kali-armitage.desktop', 'kali-burpsuite.desktop', 'kali-beef.desktop', 'kali-faraday.desktop', 'leafpad.desktop', 'gnome-tweak-tool.desktop','sublime_text.desktop', 'keepnote.desktop', 'icedove.desktop', 'shutter.desktop' , 'hexchat.desktop']"
-fi
-
-##### Configure GNOME terminal ;  Note: need to restart xserver for effect
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Configuring GNOME terminal${ORANGE} ~ CLI interface"
-gconftool-2 -t bool -s /apps/gnome-terminal/profiles/Default/scrollback_unlimited true
-gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/background_type transparent
-gconftool-2 -t string -s /apps/gnome-terminal/profiles/Default/background_darkness 0.85611499999999996
 
 
 ##### Configure bash - All users
@@ -129,7 +146,7 @@ source "${file}" || source ~/.zshrc
 
 
 ##### Install grc
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing grc   ${ORANGE} ~ Colours Shell Output${WHITE}"
+(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing grc   ${ORANGE} ~ Colours Shell Output${RESET}"
 apt -y -qq install grc \
 || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
 #--- Setup aliases
@@ -311,21 +328,23 @@ EOF
 
 #--- Show address bar on nautilus
 gsettings set org.gnome.nautilus.preferences always-use-location-entry true
-#--- Sort Directories First.
-gsettings set org.gnome.nautilus.preferences sort-directories-first true
 #--- Show hidden files
 gsettings set org.gnome.nautilus.preferences show-hidden-files true
 gsettings set org.gtk.Settings.FileChooser show-hidden true
 #--- Show Directory items count & Folder Order
-gsettings set org.gnome.nautilus.preferences show-directory-item-counts true
+gsettings set org.gnome.nautilus.preferences show-directory-item-counts local-only
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
+# #--- Sort Directories First.
+# gsettings set org.gnome.nautilus.preferences sort-directories-first true
 #-- Default Sort Order by type , options are:  name, type ,
 gsettings set org.gnome.nautilus.preferences default-sort-order type
 #-- Enable Trash Icon on Desktop
 gsettings set org.gnome.nautilus.desktop trash-icon-visible true
 
 #--- Adding nautilus bookmark entries
-echo -e "${GREEN}[*] ${ORANGE} Setting up Bookmarks ${RESET}"
+
+echo -e "${ORANGE} [*]${YELLOW} Setting up Bookmarks ${RESET}"
+
 
   #  read -p "!!!Enter the path of each directory you would like bookmarked - EX:/usr/share and a name for the bookmark (Hit Enter to Continue)";
   #  echo "[*] 3 Entries max, more can be manually entered. (FTP, TFTP, HTML, and Root Dir / done by default."
@@ -340,6 +359,19 @@ echo -e "${GREEN}[*] ${ORANGE} Setting up Bookmarks ${RESET}"
    echo file:///var/tftp tftp >> ~/.config/gtk-3.0/bookmarks
    echo file:///tmp  /tmp >> ~/.config/gtk-3.0/bookmarks
 
+   echo file:///root/Dropbox  /Dropbox >> ~/.config/gtk-3.0/bookmarks
+
+  #  read -p "[*] Enter the FTP user you created to create the FTP bookmark: " ftpuser;
+  #  echo file:///var/ftp/"$ftpuser" ftp >> ~/.config/gtk-3.0/bookmarks
+  #  for a in $(seq 1 3); do
+  #       read -p "[*] Enter additional entries now EX:/usr/bin.  enter 'exit' when done: " loc;
+  #       if [ "$loc" == "exit" ]; then
+  #            break
+  #       else
+  #            read -p "[*] Enter a name for this bookmark entry EX: bin: " name;
+  #            echo file://"$loc" "$name" >> ~/.config/gtk-3.0/bookmarks
+  #       fi
+  #  done
 
   #  read -p "[*] Enter the FTP user you created to create the FTP bookmark: " ftpuser;
   #  echo file:///var/ftp/"$ftpuser" ftp >> ~/.config/gtk-3.0/bookmarks
@@ -354,14 +386,15 @@ echo -e "${GREEN}[*] ${ORANGE} Setting up Bookmarks ${RESET}"
   #  done
 
 
+# Bash completion is in every kali....
 ##### Install bash completion - all users
-(( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Bash Completion${ORANGE} ~ Tab Complete CLI Commands ${RESET}"
-apt -y -qq install bash-completion \
-|| echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
-file=/etc/bash.bashrc; [ -e "${file}" ] && cp -n $file{,.bkup}   #~/.bashrc
-sed -i '/# enable bash completion in/,+7{/enable bash completion/!s/^#//}' "${file}"
-#--- Apply new configs
-source "${file}" || source ~/.zshrc
+# (( STAGE++ )); echo -e "\n\n ${GREEN}[*]${RESET} (${STAGE}/${TOTAL}) ${GREEN} Installing Bash Completion${ORANGE} ~ Tab Complete CLI Commands ${RESET}"
+# #apt -y -qq install bash-completion \
+# || echo -e ' '${RED}'[!] Issue with apt install'${RESET} 1>&2
+# file=/etc/bash.bashrc; [ -e "${file}" ] && cp -n $file{,.bkup}   #~/.bashrc
+# sed -i '/# enable bash completion in/,+7{/enable bash completion/!s/^#//}' "${file}"
+# #--- Apply new configs
+# source "${file}" || source ~/.zshrc
 
 
 ###### Configure login screen- To always log as root
@@ -655,8 +688,9 @@ X-GNOME-Autostart-enabled=true
 Name=wallpaper
 EOF
 
-echo -e "\n ${GREEN} [*] ${ORANGE}Let's create simlinks for WordLists ${RESET}"
+echo -e "\n ${GREEN}[*] ${RESET}Let's create simlinks for: ${YELLOW}WordLists ${RESET}"
 ln -s /usr/share/wordlists/rockyou.txt /root/rockyou.txt
+ln -s /usr/share/wordlists/dirb/common.txt /root/common.txt
 ln -s /usr/share/wordlists/dirbuster /root/
 
 
